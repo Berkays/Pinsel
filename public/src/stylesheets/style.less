@@ -1,0 +1,135 @@
+body {
+  padding: 0 0 0 0;
+  .color-main();
+}
+
+footer {
+    min-height: 320px;
+    background-color: #181818;
+
+    img {
+        -webkit-filter: invert(1);
+        filter: invert(1);
+    }
+}
+
+.footer-section {
+    background-color: #0d0d0d;
+}
+
+/* FONTS */
+.kreon {
+    font-family: 'Kreon', serif;
+}
+.sniglet {
+    font-family: 'Sniglet', cursive;
+}
+.berkshire {
+    font-family: 'Berkshire Swash', cursive;
+}
+
+
+.color-main {
+background: rgb(2,0,36);
+background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,110,100,1) 85%, rgba(11,173,158,1) 100%);
+}
+
+.navbar-scroll-color {
+    background-color: #375568;
+}
+
+.color-main-accent {
+    background-color: #b71815;
+}
+
+.color-3 {
+    background-color: #f0d6c1;
+}
+
+.color-4 {
+    background-color: #F5E4D7;
+}
+
+/* NAVBAR */
+.navbar {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    
+    .navbar-wrapper {
+        width: 960px;
+        height: 100px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.8em;
+        height: 100%;
+        .kreon();
+    }
+    
+    .nav-link {
+        font-size: 1.1em;
+        font-weight: 500;
+        .sniglet();
+    }
+    
+    .nav-link:hover {
+        color: black;
+    }
+    
+    .navbar-seperator {
+        width: 2px;
+        height: 100%;
+        .color-main-accent();
+    }
+    
+    .nav-item {
+        margin-left: 0.3em !important;
+        margin-right: 0.3em !important;
+    }
+
+    .nav-dropdown {
+        position: relative;
+    }
+
+    .nav-dropdown:hover > ul {
+    visibility: visible;
+    transform: scale(1) translateY(20px);
+    opacity: 1;
+    }
+
+    .nav-dropdown > ul {
+    text-align: left;
+    display: block;
+    position: absolute;
+    top: 100%;
+    opacity: 0;
+    left: 0;
+    width: 16em;
+    z-index: 1000;
+    color: white;
+    visibility: hidden;
+    transform: scale(0.95) translateY(20px);
+    -webkit-transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -moz-transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -o-transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    }
+
+    .nav-dropdown .list-group-item-action {
+        background-color: white;
+        transition: all 150ms cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    }
+
+    .nav-dropdown .list-group-item-action:hover {
+        background-color: #b71815;
+    }
+
+}
+
+#particles-js {
+    padding-top: 5em;
+    height: 100vh;
+    width: 100%;
+}
