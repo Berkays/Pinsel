@@ -6,7 +6,9 @@ body {
 footer {
     min-height: 320px;
     background-color: #181818;
-
+    position: relative;
+    bottom: 0%;
+    left: 0%;
     img {
         -webkit-filter: invert(1);
         filter: invert(1);
@@ -132,4 +134,46 @@ background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,110,100,1) 85%, rg
     padding-top: 5em;
     height: 100vh;
     width: 100%;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #fff;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
 }
