@@ -12,6 +12,11 @@
             "type": "gulp",
             "task": "clean",
             "problemMatcher": []
+        },
+        {
+            "type": "gulp",
+            "task": "sync",
+            "problemMatcher": []
         }
     ]
 }
