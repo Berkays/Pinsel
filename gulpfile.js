@@ -4,8 +4,14 @@ var gulp = require('gulp');
 var less = require('gulp-less');
 var minify = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
-var streamify = require('gulp-streamify');
 const image = require('gulp-image');
+var browserify = require('browserify');
+var rename = require('gulp-rename');
+var path = require('path');
+
+var source = require('vinyl-source-stream');
+var glob = require('glob')
+var es = require('event-stream');
 
 var nodemon = require('gulp-nodemon');
 var browserSync = require('browser-sync');
@@ -16,9 +22,9 @@ const base_path = './public/src/';
 const dist_path = './public/dist/';
 
 const compiled_assets = {
-    css: './public/src/stylesheets/*.css',
-    less_css: './public/src/stylesheets/*.less',
-    js: './public/src/scripts/*.js',
+    css: './public/src/stylesheets/**/*.css',
+    less_css: './public/src/stylesheets/**/*.less',
+    js: './public/src/scripts/**/*.js',
     images: './public/src/images/*'
 };
 
@@ -34,12 +40,23 @@ const _move = () => {
         .pipe(gulp.dest(dist_path))
 };
 
-const _js = () => {
-    return gulp.src(compiled_assets.js, { base: base_path })
-        .pipe(cache('js'))
-        .pipe(streamify(uglify()))
-        .pipe(gulp.dest(dist_path))
-        .pipe(browserSync.reload({ stream: true }));
+const _js = (done) => {
+    return glob(compiled_assets.js, { matchBase: false}, function (err, files) {
+        if (err) done(err);
+
+        var tasks = files.map(function(entry) {
+        var dir = path.relative(base_path,entry);
+        dir = path.dirname(dir);
+
+        return browserify({ entries: [entry] })
+            .bundle()
+            .pipe(cache('js'))
+            .pipe(source(entry))
+            .pipe(rename({ dirname: dir }))
+            .pipe(gulp.dest(dist_path));
+        });
+    es.merge(tasks).on('end',done);
+    });
 };
 
 const _less = () => {
@@ -82,7 +99,6 @@ const _browsersync = () => {
         port: 3001
     });
     gulp.watch(watched, gulp.parallel('build'));
-
 };
 
 const _clean = () => {
