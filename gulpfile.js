@@ -26,7 +26,7 @@ const compiled_assets = {
     css: './public/src/stylesheets/**/*.css',
     less_css: './public/src/stylesheets/**/*.less',
     js: './public/src/scripts/**/*.js',
-    images: './public/src/images/*'
+    images: './public/src/images/**/*'
 };
 
 const moved_assets = [
@@ -53,7 +53,8 @@ const _js = (done) => {
                 .pipe(cache('js'))
                 //.pipe(streamify(uglify()))
                 .pipe(rename({ dirname: dir }))
-                .pipe(gulp.dest(dist_path));
+                .pipe(gulp.dest(dist_path))
+                .pipe(browserSync.reload({ stream: true })); // reload on change
         });
         es.merge(tasks).on('end', done);
     });
@@ -61,7 +62,7 @@ const _js = (done) => {
 
 const _less = () => {
     return gulp.src(compiled_assets.less_css, { base: base_path })
-        .pipe(cache('less'))
+        //.pipe(cache('less'))
         .pipe(less()).on('error', (error) => console.error(error)) // compile to css
         .pipe(minify()).on('error', (error) => console.error(error)) // minify
         .pipe(gulp.dest(dist_path)) // output
@@ -102,7 +103,7 @@ const _server = (cb) => {
                 port: 3001
             });
 
-            gulp.watch('public/src/**/*.*', gulp.series('build'));
+            gulp.watch('public/src/**/*.*', gulp.series('build', _move));
         }
     });
 };
@@ -114,4 +115,4 @@ const _clean = () => {
 
 gulp.task('clean', gulp.series(_clean));
 gulp.task('build', gulp.parallel(_js, _less, _css, _image, _move));
-gulp.task('sync', _server);
+gulp.task('sync', gulp.series(_clean,'build',_server));

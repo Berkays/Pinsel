@@ -1,6 +1,8 @@
 var Web3 = require('web3');
 var contract = require('truffle-contract');
 
+var owl = require('owl.carousel/dist/owl.carousel');
+
 App = {
     web3Provider: null,
     contracts: {},
@@ -52,6 +54,24 @@ App = {
 
 $(function () {
     $(window).on('load', () => {
-        App.init();
+        //App.init();
+        //initImages();
     });
 });
+
+$(document).ready(() => {
+    initImages();
+});
+
+function initImages() {
+    $('.owl-carousel').owlCarousel({
+        center: true,
+        items: 3,
+        loop: true,
+        margin: 200,
+        autoWidth: true,
+        autoplay: true,
+        autoplayTimeout: 2500,
+        autoplayHoverPause: true,
+    });
+}

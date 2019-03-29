@@ -1,3 +1,6 @@
+const jQuery = require('jquery');
+window.$ = window.jQuery = jQuery;
+
 window.onscroll = function () { navbarScroll() };
 
 // OnScroll Navbar event
