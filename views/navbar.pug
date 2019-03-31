@@ -9,18 +9,20 @@ nav(class="navbar navbar-dark navbar-expand-lg fixed-top p-0" role="navigation")
         
         div.navbar-collapse.collapse.d-flex.flex-row.justify-content-end
             ul.nav.navbar-nav.d-flex.h-100
-                li.nav-item.active.h-100.hvr-underline-from-center
+                li(class=(activeNav == 'home') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/') Home
-                li.nav-item.h-100.hvr-underline-from-center
+                li(class=(activeNav == 'browse') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/gallery') Browse
-                li.nav-item.h-100.hvr-underline-from-center
+                li(class=(activeNav == 'upload') ? "active" : "").nav-item.h-100.hvr-underline-from-center
+                    a.nav-link.h-100.d-flex.align-items-center(href='/upload') Upload
+                li(class=(activeNav === 'usage') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/usage') How To Use
                 li.nav-item.h-100.hvr-underline-from-center
-                    a.nav-link.h-100.d-flex.align-items-center(href='https://github.com/Berkays/ArtChain') Github
-                li.nav-item.h-100.hvr-bubble-float-bottom.nav-dropdown
+                    a.nav-link.h-100.d-flex.align-items-center(href='https://github.com/Berkays/ArtChain', target="_blank") Github
+                li(class=(activeNav === 'tech') ? "active" : "").nav-item.h-100.nav-dropdown
                     a.nav-link.h-100.d-flex.align-items-center(href='/tech') Technologies
-                        ul.list-group
+                        ul.list-group.sniglet
                             a.list-group-item.list-group-item-action(href="#") Frontend
                             a.list-group-item.list-group-item-action(href="#") Backend
-                li.nav-item.h-100.hvr-underline-from-center
+                li(class=(activeNav === 'contact') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/contact') Contact
