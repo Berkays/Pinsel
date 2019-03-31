@@ -1,77 +1,104 @@
 extends layout
 
 block styles
-    link(rel="stylesheet", href="./stylesheets/spinkit/css/spinkit.css")
+
+block toplevel
+    #exampleModalCenter.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalCenterTitle' aria-hidden='true')
+        .modal-dialog.modal-lg.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalCenterTitle.modal-title Crying River
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body.p-0
+                    .container-fluid.pt-0
+                        .row
+                            .col
+                                img#artimage.rounded(src="#" alt="" style="width:420px;height:420px")
+                            .col.pt-3
+                                h2.display-5 Crying River
+                                hr
+                                p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                                | Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                p.text-muted.small.pt-3
+                                    i Uploaded at 31.03.2019
+                                p
+                                    i By John Cena
+                .modal-footer.d-block
+                    .input-group.mb-3.px-5
+                        .input-group-prepend
+                            span.input-group-text.p-0
+                                img.p-1(src="./images/ether.svg", alt="", style="width:32px;height:32px;")
+                        input.form-control.text-right(type='text' aria-label='Amount')
+                    button.btn.btn-success(type='button') Send Donation
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
 
 block content
-    div.row.content-block.body-push
+    div#particles-js.particles-js-background
+    div.body-push
+    div#metamask.row.content-block.justify-content-center
         div.col.mb-auto.mt-auto
             div.spinner.ml-auto.mr-auto.mt-5.mb-5
                 div.double-bounce1
                 div.double-bounce2
-            div.text-light.text-center.kreon
+            div#failure.mt-5.mb-5.text-center(style="display:none;")
+                img(src="/images/failure.svg", alt="Failure")
+            div#accessStatusText.text-light.text-center.kreon
                 h4 Requesting Access...
     div.content-block.purple.text-white
         div.text-center
-            h4.pt-4.pb-4.shadow-sm.berkshire Featured
+            h4.pt-4.pb-4.shadow-sm.fredoka.display-4 Featured
             div#featured.owl-carousel.owl-theme.mt-5.pb-5.pl-5.pr-5
                 div.slide-img
-                    img.hvr-grow.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                    a#modalTest(data-toggle="modal" data-target="#exampleModalCenter")
+                        img.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
+                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
+                            br
+                            .mt-1
+                            | From
+                            i  Elvis
                 div.slide-img
-                    img.hvr-grow.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                    a(href="#")
+                        img.rounded-lg.shadow-lg(src="/images/uploads/img2.jpg", alt="")
+                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
+                            br
+                            .mt-1
+                            | From
+                            i  Elvis
                 div.slide-img
-                    img.hvr-grow.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                    a(href="#")
+                        img.rounded-lg.shadow-lg(src="/images/uploads/img3.jpg", alt="")
+                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
+                            br
+                            .mt-1
+                            | From
+                            i  Elvis
                 div.slide-img
-                    img.hvr-grow.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                    a(href="#")
+                        img.rounded-lg.shadow-lg(src="/images/uploads/img4.jpg", alt="")
+                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
+                            br
+                            .mt-1
+                            | From
+                            i  Elvis
                 div.slide-img
-                    img.hvr-grow.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                    a(href="#")
+                        img.rounded-lg.shadow-lg(src="/images/uploads/img5.jpg", alt="")
+                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
+                            br
+                            .mt-1
+                            | From
+                            i  Elvis
     div.row.content-block.green.text-white
         div.col.text-center
-            h4.pt-4.pb-4.shadow-sm.berkshire Most Donated
-            div#mostDonated.owl-carousel.owl-theme.mt-5.pb-5.pl-5.pr-5
-                div.slide-img
-                    img.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
-    div.row.content-block.yellow.text-white
+            h4.pt-4.pb-4.shadow-sm.fredoka.display-4 Most Donated
+            div#mostDonated.owl-carousel.owl-theme.mt-5.pb-5.pl-5.pr-5             
+    div.row.content-block.blue.text-white
         div.col.text-center
-            h4.pt-4.pb-4.shadow-sm.berkshire New Uploads
+            h4.pt-4.pb-4.shadow-sm.fredoka.display-4 New Uploads
             div#newUploads.owl-carousel.owl-theme.mt-5.pb-5.pl-5.pr-5
-                div.slide-img
-                    img.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                    span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                        br
-                        .mt-1
-                        | From
-                        i  Elvis
+                
 
 block scripts
     script(src="./scripts/gallery.js")
