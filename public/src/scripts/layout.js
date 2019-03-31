@@ -1,6 +1,9 @@
 const jQuery = require('jquery');
 window.$ = window.jQuery = jQuery;
 
+const popper = require('popper.js');
+const bootstrap = require('bootstrap');
+
 window.onscroll = function () { navbarScroll() };
 
 // OnScroll Navbar event
