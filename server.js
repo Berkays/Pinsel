@@ -10,6 +10,7 @@ const port = 3000 || process.env.PORT;
 
 var indexRouter = require('./routes/index');
 var galleryRouter = require('./routes/gallery');
+var uploadRouter = require('./routes/upload');
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public/dist')));
 
 app.use('/', indexRouter);
 app.use('/gallery', galleryRouter);
+app.use('/upload', uploadRouter);
 
 app.listen(port, () => {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
