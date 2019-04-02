@@ -135,10 +135,6 @@ const _server = (cb) => {
 
             browserSync.init(null, {
                 proxy: "http://localhost:3000",
-                //files: [
-                //"public/dist/**/*.*",
-                //"views/*.pug"
-                //],
                 port: 3001
             });
         }
@@ -153,4 +149,4 @@ const _clean = () => {
 gulp.task('clean', gulp.series(_clean));
 gulp.task('build', gulp.parallel(_js, _less, _image, _move));
 gulp.task('sync', gulp.series(_clean, 'build', gulp.parallel(_server, 'watch')));
-gulp.task('serve', gulp.series('build', gulp.parallel(_server, 'watch')));
+gulp.task('serve', gulp.parallel(_server, 'watch'));
