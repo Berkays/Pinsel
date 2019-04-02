@@ -5,7 +5,7 @@ require('particles.js');
 particlesJS.load('particles-js', './scripts/particlesjs-config.json');
 
 require('owl.carousel/dist/owl.carousel');
-
+var swal = require('sweetalert2');
 
 App = {
     web3Provider: null,
@@ -108,25 +108,64 @@ function onMetamaskEnable() {
     $('#metamask').hide();
 }
 
-$('#exampleModalCenter').on('show.bs.modal', function (event) {
+$('#artModal').on('show.bs.modal', function (event) {
     var sender = $(event.relatedTarget); // Button that triggered the modal
 
-    var imgSrc = $(sender).children().attr('src');
-    console.log(imgSrc);
+    var data = JSON.parse($(sender).attr('data-artwork'));
 
-    
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    
     var modal = $(this);
-    modal.find('#artimage').attr('src',imgSrc);
+
+    modal.find('#artModalTitle').text(data.name);
+    modal.find('h2').text(data.name);
+    modal.find('#artModalDescription').text(data.description);
+    modal.find('#artModalUploadDate').text("Uploaded At " + data.upload_date);
+    modal.find('#artModalAuthor').text("By " + data.author);
+    modal.find('#artModalImage').attr('src',data.file);
+
+
+    var minLimit = (data.total_donation / data.donation_count) - 5;
+    if(minLimit < 0.1)
+        minLimit = 0.1;
+    var maxLimit = (data.total_donation / data.donation_count) + 5;
+
+    modal.find('#artModalAverageDonation').text("Average Donation: " + (data.total_donation / data.donation_count));
 
     var donationSlider = modal.find('#donationSlider');
     var donationSliderLabel = $("label[for=donationSlider]");
+    
+    donationSlider.attr('min',minLimit);
+    donationSlider.attr('max',maxLimit);
+    donationSlider.attr('step', (data.total_donation / data.donation_count) / 50);
+    
     donationSlider.on('input', () => {
         newVal = donationSlider.val();
         donationSliderLabel.html("Donation Amount: <b>" + newVal + " &nbspEther</b>");
     });
 
+    donationSlider.val((maxLimit - minLimit) / 2);
+    newVal = donationSlider.val();
+    donationSliderLabel.html("Donation Amount: <b>" + newVal + " &nbspEther</b>");
+
+    var sendDonation = modal.find('#sendDonation');
+
+    sendDonation.unbind('click').on('click', (e) => {
+        e.preventDefault();
+
+        var body = {
+            "name":data.name,
+            "donation":donationSlider.val()
+        }; 
+
+        $.ajax({
+            type: "POST",
+            url: "/gallery/donate",
+            data: body,
+            cache: false,
+            success: function (result) {
+                //swal("Good job!", "You clicked the button!", "success");
+                console.log("Success");
+            }
+        });
+    });
 
 })

@@ -110,6 +110,12 @@ const _image = () => {
         .pipe(browserSync.reload({ stream: true }));
 };
 
+gulp.task('directories', function () {
+    return gulp.src('*.*', {read: false})
+        .pipe(gulp.dest('./public/dist/uploads'));
+});
+
+
 const _watch = () => {
     gulp.watch(compiled_assets.css, gulp.series(_css));
     gulp.watch(compiled_assets.js).on('change', _js_watch);
@@ -147,6 +153,6 @@ const _clean = () => {
 };
 
 gulp.task('clean', gulp.series(_clean));
-gulp.task('build', gulp.parallel(_js, _less, _image, _move));
+gulp.task('build', gulp.parallel(_js, _less, _image, _move, 'directories'));
 gulp.task('sync', gulp.series(_clean, 'build', gulp.parallel(_server, 'watch')));
 gulp.task('serve', gulp.parallel(_server, 'watch'));

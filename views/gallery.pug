@@ -3,33 +3,36 @@ extends layout
 block styles
 
 block toplevel
-    #exampleModalCenter.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalCenterTitle' aria-hidden='true')
+    #artModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='artModalTitle' aria-hidden='true')
         .modal-dialog.modal-lg.modal-dialog-centered(role='document')
             .modal-content
                 .modal-header
-                    h5#exampleModalCenterTitle.modal-title Crying River
+                    h5#artModalTitle.modal-title Crying River
                     button.close(type='button' data-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
                 .modal-body.p-0
                     .container-fluid.pt-0
                         .row
                             .col
-                                img#artimage.rounded(src="#" alt="" style="width:420px;height:420px")
+                                img#artModalImage.rounded(src="#" alt="" style="width:420px;height:420px")
                             .col.pt-3
                                 h2.display-5 Crying River
                                 hr
-                                p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                                | Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                p.text-muted.small.pt-3
+                                p#artModalDescription 
+                                    | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                    | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                                    | Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                p#artModalUploadDate.text-muted.small.pt-3
                                     i Uploaded at 31.03.2019
-                                p
+                                p#artModalAuthor
                                     i By John Cena
                 .modal-footer.d-block
+                    .input-group.px-5
+                        p#artModalAverageDonation Average Donation: 5.127 Ether
                     .input-group.mb-3.px-5.mx-auto.w-75
                         label(for="donationSlider") Donation Amount: #[b 5 Ether]
                         input#donationSlider(type="range" class="custom-range" min="0.01" max="0.5" step="0.005")
-                    button.btn.btn-success(type='button') Send Donation
+                    button#sendDonation.btn.btn-success(type='button') Send Donation
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
 
 block content
@@ -48,46 +51,15 @@ block content
         div.text-center
             h4.pt-4.pb-4.shadow-sm.fredoka.display-4 Featured
             div#featured.owl-carousel.owl-theme.mt-5.pb-5.pl-5.pr-5
-                div.slide-img
-                    a#modalTest(data-toggle="modal" data-target="#exampleModalCenter")
-                        img.rounded-lg.shadow-lg(src="/images/uploads/img1.jpg", alt="")
-                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                            br
-                            .mt-1
-                            | From
-                            i  Elvis
-                div.slide-img
-                    a(href="#")
-                        img.rounded-lg.shadow-lg(src="/images/uploads/img2.jpg", alt="")
-                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                            br
-                            .mt-1
-                            | From
-                            i  Elvis
-                div.slide-img
-                    a(href="#")
-                        img.rounded-lg.shadow-lg(src="/images/uploads/img3.jpg", alt="")
-                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                            br
-                            .mt-1
-                            | From
-                            i  Elvis
-                div.slide-img
-                    a(href="#")
-                        img.rounded-lg.shadow-lg(src="/images/uploads/img4.jpg", alt="")
-                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                            br
-                            .mt-1
-                            | From
-                            i  Elvis
-                div.slide-img
-                    a(href="#")
-                        img.rounded-lg.shadow-lg(src="/images/uploads/img5.jpg", alt="")
-                        span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") Crying River
-                            br
-                            .mt-1
-                            | From
-                            i  Elvis
+                each item in imagedb
+                    div.slide-img
+                        a#modalTest(data-toggle="modal" data-target="#artModal", data-artwork=item)
+                            img.rounded-lg.shadow-lg(src=item.file, alt="")
+                            span.pt-1(style="position:absolute;width:100%;height:64px;left:0px;bottom:0px;background-color: rgba(20,20,20,0.5)") #{item.name}
+                                br
+                                .mt-1
+                                | From
+                                i &nbsp;#{item.author}
     div.row.content-block.green.text-white
         div.col.text-center
             h4.pt-4.pb-4.shadow-sm.fredoka.display-4 Most Donated
