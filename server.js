@@ -6,7 +6,7 @@ const app = express();
 const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 
-const port = 3000 || process.env.PORT;
+const port = process.env.PORT || 3000;
 
 var indexRouter = require('./routes/index');
 var galleryRouter = require('./routes/gallery');
@@ -27,7 +27,7 @@ app.use('/upload', uploadRouter);
 
 app.listen(port, () => {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    //truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     console.log("Express Listening at http://localhost:" + port);
 });
 
