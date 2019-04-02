@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const app = express();
 
 const Web3 = require('web3');
@@ -19,6 +20,7 @@ app.set('view engine', 'pug');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public/dist')));
 
 app.use('/', indexRouter);
