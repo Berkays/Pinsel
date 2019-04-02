@@ -120,4 +120,13 @@ $('#exampleModalCenter').on('show.bs.modal', function (event) {
     
     var modal = $(this);
     modal.find('#artimage').attr('src',imgSrc);
+
+    var donationSlider = modal.find('#donationSlider');
+    var donationSliderLabel = $("label[for=donationSlider]");
+    donationSlider.on('input', () => {
+        newVal = donationSlider.val();
+        donationSliderLabel.html("Donation Amount: <b>" + newVal + " &nbspEther</b>");
+    });
+
+
 })

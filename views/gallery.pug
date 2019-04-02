@@ -26,11 +26,9 @@ block toplevel
                                 p
                                     i By John Cena
                 .modal-footer.d-block
-                    .input-group.mb-3.px-5
-                        .input-group-prepend
-                            span.input-group-text.p-0
-                                img.p-1(src="./images/ether.svg", alt="", style="width:32px;height:32px;")
-                        input.form-control.text-right(type='text' aria-label='Amount')
+                    .input-group.mb-3.px-5.mx-auto.w-75
+                        label(for="donationSlider") Donation Amount: #[b 5 Ether]
+                        input#donationSlider(type="range" class="custom-range" min="0.01" max="0.5" step="0.005")
                     button.btn.btn-success(type='button') Send Donation
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
 
