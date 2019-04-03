@@ -56,15 +56,13 @@ App = {
     },
 
     bindEvents: function () {
-        // $(document).on('click', '.btn-adopt', App.handleAdopt);
     }
 };
 
 $(function () {
     $(window).on('load', () => {
-        console.log("123");
         setTimeout(() => {
-            //App.init();
+            App.init();
         },3000);
     });
 });
@@ -73,7 +71,7 @@ $(document).ready(() => {
     initImages();
 
     // Modal Test
-    $('#modalTest').click();
+    //$('#modalTest').click();
 });
 
 function initImages() {
@@ -128,7 +126,7 @@ $('#artModal').on('show.bs.modal', function (event) {
         minLimit = 0.1;
     var maxLimit = (data.total_donation / data.donation_count) + 5;
 
-    modal.find('#artModalAverageDonation').text("Average Donation: " + (data.total_donation / data.donation_count));
+    modal.find('#artModalAverageDonation').html("Average Transaction: <b>" + (data.total_donation / data.donation_count) + " Ether</b>");
 
     var donationSlider = modal.find('#donationSlider');
     var donationSliderLabel = $("label[for=donationSlider]");
@@ -139,12 +137,12 @@ $('#artModal').on('show.bs.modal', function (event) {
     
     donationSlider.on('input', () => {
         newVal = donationSlider.val();
-        donationSliderLabel.html("Donation Amount: <b>" + newVal + " &nbspEther</b>");
+        donationSliderLabel.html("Transaction Amount: <b>" + newVal + " Ether</b>");
     });
 
     donationSlider.val((maxLimit - minLimit) / 2);
     newVal = donationSlider.val();
-    donationSliderLabel.html("Donation Amount: <b>" + newVal + " &nbspEther</b>");
+    donationSliderLabel.html("Transaction Amount: <b>" + newVal + " Ether</b>");
 
     var sendDonation = modal.find('#sendDonation');
 
