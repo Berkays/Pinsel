@@ -23,8 +23,8 @@ block content
                     label#artFileLabel.custom-file-label(for='artFile') Choose file
                     input#artFile.custom-file-input(type='file' name="file" accept="image/*" onchange="preview(event)")
             .form-group.text-center
-                label(for='artPreview') Preview:
-                img#artPreview.d-block.w-100(src="/images/uploads/img1.jpg", alt="")
+                label(for='artPreview').d-none Preview:
+                img#artPreview.d-block.w-100(src="#", alt="")
             button#submitArtwork.btn.btn-primary(type='submit') Submit Artwork
 
 block scripts

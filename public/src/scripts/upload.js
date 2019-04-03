@@ -7,4 +7,5 @@ $(document).ready(function () {
 preview = function (event) {
     var src = URL.createObjectURL(event.target.files[0]);
     $('#artPreview').attr('src',src);
+    $('#artPreview').parent().children().first().removeClass('d-none');
 };
