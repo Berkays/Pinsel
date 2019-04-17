@@ -68,12 +68,12 @@ const _js = () => {
 
 const _js_watch = (entry) => {
     entry = './' + entry;
-    entry = entry.replace(/\\/g,'/');
+    entry = entry.replace(/\\/g, '/');
     console.log(entry);
 
     var dir = path.relative(base_path, entry);
     dir = path.dirname(dir);
-      
+
     browserify({ entries: entry })
         .bundle().on('error', (error) => console.error(error))
         .pipe(source(entry))
@@ -82,7 +82,7 @@ const _js_watch = (entry) => {
         //.pipe(uglify())
         .pipe(rename({ dirname: dir }))
         .pipe(gulp.dest(dist_path))
-        .pipe(browserSync.reload({stream:true}));
+        .pipe(browserSync.reload({ stream: true }));
 };
 
 const _less = () => {
@@ -110,13 +110,13 @@ const _image = () => {
         .pipe(browserSync.reload({ stream: true }));
 };
 
-gulp.task('directories', function () {
-    return gulp.src('*.*', {read: false})
-        .pipe(gulp.dest('./public/dist/uploads'));
-});
-
 
 const _watch = () => {
+    gulp.watch("./public/src/**/*").on('unlink', (file) => {
+        file = './' + file;
+        file = file.replace(/\\/g, '/');
+        console.log(file);
+    });
     gulp.watch(compiled_assets.css, gulp.series(_css));
     gulp.watch(compiled_assets.js).on('change', _js_watch);
     gulp.watch(compiled_assets.less_css, gulp.series(_less));
@@ -124,6 +124,7 @@ const _watch = () => {
     gulp.watch(compiled_assets.pug).on('change', () => {
         reload();
     });
+
 }
 
 gulp.task('watch', _watch)
@@ -131,8 +132,8 @@ gulp.task('watch', _watch)
 const _server = (cb) => {
     var started = false;
     return nodemon({
-        script: 'server.js',
-        ignore: ['!(server.js)'],
+        script: './server.js',
+        ignore: ['!(./server.js)'],
         env: { 'NODE_ENV': 'development' }
     }).on('start', () => {
         if (!started) {
@@ -153,6 +154,7 @@ const _clean = () => {
 };
 
 gulp.task('clean', gulp.series(_clean));
-gulp.task('build', gulp.parallel(_js, _less, _image, _move, 'directories'));
+gulp.task('build', gulp.parallel(_js, _less, _image, _move));
 gulp.task('sync', gulp.series(_clean, 'build', gulp.parallel(_server, 'watch')));
 gulp.task('serve', gulp.parallel(_server, 'watch'));
+gulp.task('watch', gulp.parallel('watch'));

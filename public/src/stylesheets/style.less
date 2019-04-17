@@ -8,16 +8,42 @@
 @import './animations.less';
 
 @link-color: white;
+@navbar-height: 100px;
+@navbar-width: 960px;
+@footer-height: 450px;
+@body-fill-height: 5em;
 
-
+html {
+    height: 100%;
+    width: 100%;
+}
 body {
   padding: 0 0 0 0;
-  .color-main();
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    .color-main();
+    background-repeat: no-repeat;
 }
 
-.body-push {
-    margin-top: 125px;
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
 }
+
+#body-container {
+    padding-bottom: @footer-height * 1.8;
+}
+
+.navbar-push {
+    margin-top: @navbar-height;
+}
+
+.body-fill {
+    min-height: @body-fill-height;
+}
+
 
 a {
     color: rgba(255,255,255,0.8);
@@ -85,8 +111,8 @@ footer {
     transition: all 0.3s ease;
     
     .navbar-wrapper {
-        width: 960px;
-        height: 100px;
+        width: @navbar-width;
+        height: @navbar-height;
     }
     
     .navbar-brand {
@@ -154,7 +180,7 @@ footer {
     }
 
     .nav-dropdown .list-group-item-action:hover {
-        background-color: #cccccc;
+        background-color: #eee;
     }
 
 }
