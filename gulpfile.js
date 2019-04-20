@@ -28,8 +28,8 @@ const reload = () => {
 };
 
 const compiled_assets = {
-    css: './public/src/stylesheets/**/*.css',
-    less_css: './public/src/stylesheets/**/*.less',
+    less: './public/src/stylesheets/*.less',
+    less_entry: './public/src/stylesheets/style.less',
     js: './public/src/scripts/**/*.js',
     pug: './views/*.pug',
     image: './public/src/images/**/*'
@@ -47,6 +47,7 @@ const _move = () => {
 
 const _js = () => {
     var files = glob.sync(compiled_assets.js);
+    console.log("Browserify:")
     console.log(files);
     var tasks = files.map(function (entry) {
         var dir = path.relative(base_path, entry);
@@ -86,17 +87,9 @@ const _js_watch = (entry) => {
 };
 
 const _less = () => {
-    return gulp.src(compiled_assets.less_css, { base: base_path })
+    return gulp.src(compiled_assets.less_entry, { base: base_path })
         .pipe(cache('less'))
         .pipe(less()).on('error', (error) => console.error(error)) // compile to css
-        .pipe(minify()).on('error', (error) => console.error(error)) // minify
-        .pipe(gulp.dest(dist_path)) // output
-        .pipe(browserSync.reload({ stream: true })); // reload on change
-};
-
-const _css = () => {
-    return gulp.src(compiled_assets.css, { base: base_path })
-        //.pipe(cache('css'))
         .pipe(minify()).on('error', (error) => console.error(error)) // minify
         .pipe(gulp.dest(dist_path)) // output
         .pipe(browserSync.reload({ stream: true })); // reload on change
@@ -117,9 +110,13 @@ gulp.task('directories', function () {
 
 
 const _watch = () => {
-    gulp.watch(compiled_assets.css, gulp.series(_css));
+    gulp.watch("./public/src/**/*").on('unlink', (file) => {
+        file = './' + file;
+        file = file.replace(/\\/g, '/');
+        console.log(file);
+    });
     gulp.watch(compiled_assets.js).on('change', _js_watch);
-    gulp.watch(compiled_assets.less_css, gulp.series(_less));
+    gulp.watch(compiled_assets.less, gulp.series(_less));
     gulp.watch(compiled_assets.image, gulp.series(_image));
     gulp.watch(compiled_assets.pug).on('change', () => {
         reload();
@@ -131,8 +128,8 @@ gulp.task('watch', _watch)
 const _server = (cb) => {
     var started = false;
     return nodemon({
-        script: 'server.js',
-        ignore: ['!(server.js)'],
+        script: './bin/www',
+        ignore: ['!(./bin/www)'],
         env: { 'NODE_ENV': 'development' }
     }).on('start', () => {
         if (!started) {
@@ -154,5 +151,6 @@ const _clean = () => {
 
 gulp.task('clean', gulp.series(_clean));
 gulp.task('build', gulp.parallel(_js, _less, _image, _move, 'directories'));
-gulp.task('sync', gulp.series(_clean, 'build', gulp.parallel(_server, 'watch')));
+gulp.task('js', gulp.series(_js));
+gulp.task('sync', gulp.series('build', gulp.parallel(_server, 'watch')));
 gulp.task('serve', gulp.parallel(_server, 'watch'));
