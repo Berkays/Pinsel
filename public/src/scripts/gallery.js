@@ -1,5 +1,4 @@
 var Web3 = require('web3');
-var contract = require('truffle-contract');
 
 require('particles.js');
 particlesJS.load('particles-js', './scripts/particlesjs-config.json');
