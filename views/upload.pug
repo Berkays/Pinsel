@@ -3,9 +3,18 @@ extends layout
 block styles
 
 block content
-    div.body-push
-    .row.justify-content-md-center.my-5
-        form.col-4.border.border-1.bg-white.rounded.p-4.shadow(action='http://localhost:3000/upload' method='post' encType="multipart/form-data")
+    .navbar-push
+    div#metamask.row.content-block.justify-content-center
+            div.col.mb-auto.mt-auto
+                div.spinner.ml-auto.mr-auto.mt-5.mb-5
+                    div.double-bounce1
+                    div.double-bounce2
+                div#failure.mt-5.mb-5.text-center(style="display:none;")
+                    img(src="/images/failure.svg", alt="Failure")
+                div#accessStatusText.text-light.text-center.kreon
+                    h4 Requesting Access...
+    .row.justify-content-md-center
+        form#uploadForm.col-4.border.border-1.bg-white.rounded.p-4.shadow(action='http://localhost:3000/upload' method='post' encType="multipart/form-data")
             .form-group
                 p.h4.text-center Upload new Artwork
                 hr
@@ -26,6 +35,5 @@ block content
                 label(for='artPreview').d-none Preview:
                 img#artPreview.d-block.w-100(src="#", alt="")
             button#submitArtwork.btn.btn-primary(type='submit') Submit Artwork
-
 block scripts
     script(src="./scripts/upload.js")
