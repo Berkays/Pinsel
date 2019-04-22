@@ -4,14 +4,14 @@ block styles
 
 block content
     div#particles-js.particles-js-viewport
-        div.text-center.focus-in-contract-bck(style="position:absolute;top:40%;width:100%;background-color:rgba(0,0,0,0.2)")
-            div.text-center.focus-in-contract-bck(style="animation-delay:0.5s")
-                h2.display-1.text-white
-                    | Art Exibition
-            div.text-center.focus-in-contract-bck(style="animation-delay:1.5s")
-                h2.display-1.text-white(style="padding-left:15rem")
-                    | Redefined.
-        img.ml-auto.mr-auto.invert.rotate-axis(src="./images/arrow_down.svg",style="position:absolute;bottom:2%;left:0%;right:0%;width:72px;height:72px")
-    div(style="min-height:250px;background-color:#AAAAAA")
+        .position-absolute.w-100.vh-100.d-flex.flex-column
+            div.my-auto.focus-in-contract-bck.w-100(style="max-height:250px;background-color:rgba(0,0,0,0.2)")
+                div.text-center.focus-in-contract-bck(style="animation-delay:0.5s")
+                    h1.display-1.text-white
+                        | Art Exibition
+                div.text-center.focus-in-contract-bck(style="animation-delay:1.5s")
+                    h1.display-1.text-white(style="padding-left:15rem")
+                        | Redefined.
+            img.d-block.mx-auto.invert.rotate-axis(src="./images/arrow_down.svg",style="width:72px;height:72px;margin-bottom:5em")
 block scripts
     script(src="./scripts/index.js")
