@@ -1,4 +1,5 @@
 pragma solidity ^0.5;
+pragma experimental ABIEncoderV2;
 
 contract ArtworkController {
 
@@ -6,36 +7,37 @@ contract ArtworkController {
     event ArtworkSubscribed();
     
     struct Artwork {
-        address hash;
         address payable owner;
-        string imageName;
+        bytes32 imageName;
+        bytes16 imageAuthor;
+        string imageDescription;
         bool flexPayment;
         uint avgTransfer;
         uint transferSum;
         uint transferCount;
     }
 
-    mapping(uint => Artwork) public artworks;
-    uint private artworkCount = 0;
+    mapping(string => Artwork) private artworks;
+    string[] public artworkHashes;
 
     constructor() public {
     }
 
-    modifier artworkExists(uint artworkId)
+    modifier artworkExists(string memory artworkHash)
     {
-        require(artworks[artworkId].owner != address(0),"Artwork does not exist.");
+        require(artworks[artworkHash].owner != address(0),"Artwork does not exist.");
         _;
     }
 
-    modifier artworkNotExists(uint artworkId)
+    modifier artworkNotExists(string memory artworkHash)
     {
-        require(artworks[artworkId].owner == address(0),"Artwork already exists.");
+        require(artworks[artworkHash].owner == address(0),"Artwork already exists.");
         _;
     }
 
-    modifier inDonationLimit(uint artworkId,uint amount)
+    modifier inDonationLimit(string memory artworkHash,uint amount)
     {
-        uint avgTransfer = artworks[artworkId].avgTransfer;
+        uint avgTransfer = artworks[artworkHash].avgTransfer;
         // int min = int(avgTransfer) - 5;
         uint max = avgTransfer + 5;
         // if(min < 1) // uint overflow
@@ -56,33 +58,55 @@ contract ArtworkController {
         _;
     }
 
-    function addArtwork(string memory imageName)
-        public
-        artworkNotExists(artworkCount)
+    modifier onlyOwner(string memory artworkHash, address sender)
     {
-        artworks[artworkCount] = Artwork(msg.sender,msg.sender,imageName,false,0,0,0);
-        artworkCount++;
+        require(sender == artworks[artworkHash].owner, "Only artwork owner can delete the image");
+        _;
+    }
+
+    function addArtwork(string memory artworkHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription)
+        public
+        artworkNotExists(artworkHash)
+    {
+        artworks[artworkHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,false,0,0,0);
+        artworkHashes.push(artworkHash);
         emit ArtworkSubscribed();
     }
 
-    // function getArtworkDetails() 
-    //     public
-    //     view
-    // {
-         
-    // }
+    function deleteArtwork(string memory artworkHash)
+        public
+        onlyOwner(artworkHash,msg.sender)
+    {
+    }
 
-    function license(uint artworkId) 
+    function getArtworks() view public returns(string[] memory) {
+        return artworkHashes;
+    }
+
+    function getArtworksLength() view public returns (uint) {
+        return artworkHashes.length;
+    }
+
+    function getArtworkDetails(string memory artworkHash)
+        public
+        view
+        artworkExists(artworkHash)
+        returns(bytes32,bytes16,string memory,bool,uint,uint)
+    {
+        return (artworks[artworkHash].imageName,artworks[artworkHash].imageAuthor,artworks[artworkHash].imageDescription,artworks[artworkHash].flexPayment,artworks[artworkHash].avgTransfer,artworks[artworkHash].transferCount);
+    }  
+
+    function license(string memory artworkHash) 
         public 
         payable 
-        artworkExists(artworkId)
+        artworkExists(artworkHash)
         // inDonationLimit(artworkId,msg.value)
-        differentPerson(msg.sender,artworks[artworkId].owner)
+        differentPerson(msg.sender,artworks[artworkHash].owner)
     {
         assert(msg.value > 0);
         assert(msg.value <= address(this).balance);
 
-        Artwork storage artwork = artworks[artworkId];
+        Artwork storage artwork = artworks[artworkHash];
         artwork.owner.transfer(msg.value);
         artwork.transferSum += msg.value;
         artwork.transferCount++;
