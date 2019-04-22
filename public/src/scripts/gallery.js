@@ -4,7 +4,6 @@ require('particles.js');
 particlesJS.load('particles-js', './scripts/particlesjs-config.json');
 
 require('owl.carousel/dist/owl.carousel');
-var swal = require('sweetalert2');
 
 App = {
     web3Provider: null,
