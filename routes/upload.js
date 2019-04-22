@@ -2,63 +2,57 @@ var express = require('express');
 var router = express.Router();
 const path = require('path');
 
-/* GET Browser page. */
+/* GET Upload page. */
 router.get('/', function (req, res, next) {
     res.render('upload', { title: 'ArtChain Upload', activeNav: 'upload' });
 });
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
     const ipfs = req.app.ipfs;
 
+    console.log(req.files.file.data);
+
+    if (ipfs.connected == false) {
+        res.send('IPFS error');
+        return;
+    }
+
     if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('No files were uploaded.');
+        res.send('No files were uploaded.');
+        return;
     }
 
     const imgFile = req.files.file;
-    const  imgFileName = imgFile.name;
+    const imgFileName = imgFile.name;
 
-    const fileObj = {
-        path: path.join('/uploads',imgFileName),
+    const ipfsFileObj = {
+        path: path.join('/uploads', imgFileName),
         content: imgFile.data
     };
 
-    ipfs.add(fileObj, function (err, results) {
-        if (err) {
-            console.log(err);
-            return;
+    const ipfsOperation = ipfs.add(ipfsFileObj);
+
+    const respond = ipfsOperation.then((result) => {
+        hash = result[0].hash;
+        console.log("File Hash: " + hash);
+
+        const artworkObj = {
+            name: req.body.name,
+            author: req.body.author,
+            description: req.body.description,
+            uploadDate: new Date().getTime(),
+            hash: hash
         }
-        console.log("Uploaded to IPFS");
-        console.log(results)
-    });
 
-    //upload_date = new Date().toISOString().slice(0, 10);
-
-    // var obj = {
-    //     "name": req.body.name,
-    //     "description": req.body.description,
-    //     "author": req.body.author,
-    //     "file": '/uploads/' + imgFileName,
-    //     "upload_date": upload_date,
-    //     "total_donation":0,
-    //     "donation_count":0
-    // }
-
-    // var db = JSON.parse(fs.readFileSync('./uploads.json', 'utf8'));
-    // db['artworks'].push(obj);
-
-    // fs.writeFile('./uploads.json', JSON.stringify(db), function (err) {
-    //     if (err) throw err;
-    //     console.log('Saved!');
-    // });
-
-    // console.log(db);
-
-    // imgFile.mv('./public/dist/uploads/' + imgFileName, function(err) {
-    //     if (err)
-    //     return res.status(500).send(err);
-
-    //     res.send('File uploaded!');
-    // });
+        res.send.bind(res);
+        var responseObj = JSON.stringify(artworkObj);
+        res.status(200).json(responseObj);
+    })
+        .catch((err) => {
+            console.error(err);
+            res.send.bind(res);
+            res.status(500).send("Error while saving to ipfs");
+        });
 });
 
 module.exports = router;
