@@ -18,26 +18,57 @@ html {
     width: 100%;
 }
 body {
-  padding: 0 0 0 0;
+    padding: 0 0 0 0;
     margin: 0;
     height: 100%;
     width: 100%;
-    .color-main();
-    background-repeat: no-repeat;
 }
 
 
 #page-container {
     position: relative;
     min-height: 100vh;
+    .color-main();
 }
 
 #body-container {
-    padding-bottom: @footer-height * 1.8;
+    padding-bottom: @footer-height * 1.1;
 }
 
+.pos-f-t {
+  position: fixed;
+  top: @navbar-height;
+  right: 0;
+  left: 0;
+  z-index: 4;
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+    #body-container {
+        padding-bottom: @footer-height * 1.6;
+    }
+    
+    .d-xs-none {
+        display: none;
+    }
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    #body-container {
+        padding-bottom: @footer-height * 1.6;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #body-container {
+        padding-bottom: @footer-height * 1.65;
+    }
+ }
+
 .navbar-push {
-    margin-top: @navbar-height;
+    padding-top: @navbar-height * 1.5;
 }
 
 .body-fill {
@@ -59,14 +90,32 @@ a:hover {
     filter: invert(1);
 }
 
+#navbarCollapse {
+    a {
+        .sniglet();
+        letter-spacing: 0.048px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 28px; 
+    }
+    a:hover {
+        color: rgba(255,255,255,1);
+        text-decoration: underline;
+    }
+}
+
+.footer-push {
+    margin-bottom: @footer-height;
+}
 
 footer {
-    min-height: 320px;
+    position: absolute;
+    bottom: 0;
+    min-height: @footer-height;
+    width: 100%;
+
     background-color: #262b3a;
     background-image: url("https://www.transparenttextures.com/patterns/black-twill.png");
-    position: relative;
-    bottom: 0%;
-    left: 0%;
 
     img {
         .invert();
@@ -102,7 +151,6 @@ footer {
     }
 
 }
-
 
 .navbar {
     -webkit-transition: all 0.3s ease;
@@ -187,7 +235,7 @@ footer {
 
 .particles-js-viewport {
     padding-top: 3em;
-    height: 100vh;
+    height: 100%;
     width: 100%;
 }
 
@@ -195,6 +243,7 @@ footer {
     position: absolute;
     width: 100%;
     height: 100%;
+    padding-top: 3em;
     canvas {
         display: block;
         position: fixed;
@@ -203,22 +252,11 @@ footer {
 }
 
 
-.w-33 {
-    width: 33%;
-}
-
-.pt-6 {
-    padding-top: 5em;
-}
-
-.pb-6 {
-    padding-bottom: 5em;
-}
 
 // Gallery
 
 .content-block {
-    min-height: 500px;
+    min-height: 450px;
 }
 
 #failure img {
