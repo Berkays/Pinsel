@@ -5,7 +5,7 @@ html
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
         title= title
-
+        link(rel="shortcut icon" type="image/png" href="/images/layout/favicon.png")
         link(href="https://fonts.googleapis.com/css?family=Kreon" rel="stylesheet")
         link(href="https://fonts.googleapis.com/css?family=Sniglet" rel="stylesheet")
         link(href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet")
@@ -14,9 +14,10 @@ html
         block styles
     block toplevel
     body
-        include navbar
-        div.container-fluid.p-0
-            block content
+        div#page-container.container-fluid.p-0
+            div#body-container.px-0.pt-0
+                include navbar
+                block content
             include footer
         script(src="/scripts/layout.js")
         block scripts
