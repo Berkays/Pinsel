@@ -5,8 +5,11 @@ const artworkControllerArtifact = require('../../../build/contracts/ArtworkContr
 App = {
     web3Provider: null,
     contracts: {},
+    isInit:false,
 
     init: async function () {
+        if(App.isInit)
+            return;
         return await App.initWeb3();
     },
 
@@ -17,6 +20,7 @@ App = {
             try {
                 // Request account access
                 console.log("Requesting Access...");
+                App.onMetamaskRequire();
                 await window.ethereum.enable();
                 console.log("Access given.");
                 App.onMetamaskEnable();
@@ -39,86 +43,60 @@ App = {
         }
         web3 = new Web3(App.web3Provider);
 
-        return App.initContract();
+        return await App.initContract();
     },
 
     initContract: function () {
         App.contracts.ArtworkController = contract(artworkControllerArtifact);
         App.contracts.ArtworkController.setProvider(App.web3Provider);
-        return App.bindEvents();
+
+        App.isInit = true;
     },
 
-    bindEvents: function () {
-
+    getAccount: async function () {
+        var accounts = await web3.eth.getAccounts();
+        return accounts[0];
     },
 
-    getArtworks: function () {
-        return web3.eth.getAccounts(function (error, accounts) {
-            if (error)
-                console.log(error);
-
-            var account = accounts[0];
-
-            return App.contracts.ArtworkController.deployed().then((instance) => {
-                artworkControllerInstance = instance;
-                return artworkControllerInstance.getArtworks({ from: account });
-            });
-        });
+    getDeployed: async function (contract) {
+        return await contract.deployed();
     },
 
-    getArtworkCount: function () {
-        return web3.eth.getAccounts(function (error, accounts) {
-            if (error)
-                console.log(error);
-
-            var account = accounts[0];
-
-            return App.contracts.ArtworkController.deployed().then((instance) => {
-                artworkControllerInstance = instance;
-                return artworkControllerInstance.getArtworksLength({ from: account });
-            });
-        });
+    getArtworks: async function () {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.ArtworkController);
+        return contract.getArtworks({ from: account });
     },
 
-    getArtworkDetails: function (imageHash) {
-        return web3.eth.getAccounts(function (error, accounts) {
-            if (error)
-                console.log(error);
-
-            var account = accounts[0];
-
-            return App.contracts.ArtworkController.deployed().then((instance) => {
-                artworkControllerInstance = instance;
-                return artworkControllerInstance.getArtworkDetails(imageHash, { from: account });
-            });
-        });
+    getArtworkCount: async function () {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.ArtworkController);
+        return contract.getArtworksLength({ from: account });
     },
 
-
-    submitArtwork: function (imageHash, imageName, imageAuthor, imageDescription, cb) {
-        return web3.eth.getAccounts().then(accounts => {
-            var account = accounts[0];
-
-            return App.contracts.ArtworkController.deployed().then((instance) => {
-                artworkControllerInstance = instance;
-                artworkControllerInstance.addArtwork(imageHash, imageName, imageAuthor, imageDescription, { from: account }).then((result) => cb(undefined, result));
-            }).catch((err) => cb(err, undefined));
-
-        });
+    getArtworkDetails: async function (imageHash) {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.ArtworkController);
+        return contract.getArtworkDetails(imageHash, { from: account });
     },
 
-    licenseArtwork: function (imageHash, value) {
-        return web3.eth.getAccounts(function (error, accounts) {
-            if (error)
-                console.log(error);
+    submitArtwork: async function (imageHash, imageName, imageAuthor, imageDescription) {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.ArtworkController);
+        return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, { from: account });
+    },
 
-            var account = accounts[0];
+    licenseArtwork: async function (imageHash, value) {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.ArtworkController);
+        return contract.license(imageHash, { from: account, value: value });
+    },
 
-            return App.contracts.ArtworkController.deployed().then((instance) => {
-                artworkControllerInstance = instance;
-                return artworkControllerInstance.license(imageHash, { from: account, value: value });
-            });
-        });
+    onMetamaskRequire: function () {
+        $('#metamask').show();
+        $('#accessStatusText').children().text('Requesting Metamask Access.');
+        $('#metamask .spinner').show();
+        $('#failure').hide();
     },
 
     onMetamaskNotFound: function () {
@@ -145,7 +123,7 @@ App = {
 $(function () {
     $(window).on('load', () => {
         setTimeout(() => {
-            App.init();
+            //App.init();
         }, 1000);
     });
 });
