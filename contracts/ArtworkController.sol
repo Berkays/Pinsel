@@ -1,7 +1,26 @@
 pragma solidity ^0.5;
-pragma experimental ABIEncoderV2;
+pragma experimental ABIEncoderV2; // Don't use in production
+
+// Library for IPFS Hash
+// IPFS hashes take 46 bytes of space.
+library HashLib {
+    struct Hash {
+        bytes32 fHash;
+        bytes12 sHash;
+    }
+
+    function getHash(Hash memory h)
+    pure
+    public
+    returns(bytes32,bytes12)
+    {
+        return (h.fHash,h.sHash);
+    }
+}
+
 
 contract ArtworkController {
+    using HashLib for HashLib.Hash;
 
     event ArtworkLicensed();
     event ArtworkSubscribed();
@@ -79,11 +98,19 @@ contract ArtworkController {
     {
     }
 
-    function getArtworks() view public returns(string[] memory) {
+    function getArtworks() 
+        view 
+        public 
+        returns(string[] memory) 
+    {
         return artworkHashes;
     }
 
-    function getArtworksLength() view public returns (uint) {
+    function getArtworksLength() 
+        view 
+        public 
+        returns (uint) 
+    {
         return artworkHashes.length;
     }
 
