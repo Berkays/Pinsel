@@ -3,37 +3,35 @@ extends layout
 block styles
 
 block content
-    .navbar-push
-    div#metamask.row.content-block.justify-content-center
-            div.col.mb-auto.mt-auto
-                div.spinner.ml-auto.mr-auto.mt-5.mb-5
-                    div.double-bounce1
-                    div.double-bounce2
-                div#failure.mt-5.mb-5.text-center(style="display:none;")
-                    img(src="/images/failure.svg", alt="Failure")
-                div#accessStatusText.text-light.text-center.kreon
-                    h4 Requesting Access...
-    .row.justify-content-md-center
-        form#uploadForm.col-4.border.border-1.bg-white.rounded.p-4.shadow(action='http://localhost:3000/upload' method='post' encType="multipart/form-data")
+    div#particles-js.particles-js-background
+    
+    include metamaskStatus
+    .row.justify-content-md-center.navbar-push
+        form#uploadForm.col-lg-5.col-md-8.col-sm-10.p-5.rounded.text-white(action='#' method='post' encType="multipart/form-data", style="background-color:rgba(0,0,0,0.5);")
             .form-group
-                p.h4.text-center Upload new Artwork
-                hr
-                label(for='artName') Artwork Name:
-                input#artName.form-control(type='text' name="name" placeholder='Artwork Name')
-            .form-group
-                label(for='artDesc') Description:
-                textarea#artDesc.form-control(name="description" placeholder="Artwork Description")
-            .form-group
-                label(for='artAuthor') Author:
-                input#artAuthor.form-control(type='text' name="author" placeholder='Author')
-            .form-group
-                label(for='artFile') Image:
+                p.h2.pt-3.text-center.kreon Submit Artwork
+                hr.bg-dark
+                input#artName.form-control.rounded-0.sniglet.text-white.mt-4(type='text' name="name" placeholder='Artwork Name' required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
+            .form-group.pt-4
+                input#artAuthor.form-control.rounded-0.sniglet.text-white(type='text' name="author" placeholder='Author' required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
+            .form-group.pt-4
+                textarea#artDesc.form-control.rounded-0.sniglet.text-white(name="description" placeholder="Artwork Description" required, style="background:transparent; border:1px solid #333; border-bottom:1px solid #fff; font-size:18px")
+            .form-group.pt-4
                 .custom-file
-                    label#artFileLabel.custom-file-label(for='artFile') Choose file
-                    input#artFile.custom-file-input(type='file' name="file" accept="image/*" onchange="preview(event)")
+                    label#artFileLabel.custom-file-label.sniglet.text-white(for='artFile', style="background:transparent; border:1px solid #bbb; font-size:18px") Artwork to Submit
+                    input#artFile.custom-file-input.rounded-0(type='file' name="file" accept="image/*" onchange="preview(event)" required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
             .form-group.text-center
-                label(for='artPreview').d-none Preview:
+                label(for='artPreview', style="font-size:18px;").mt-4.d-none.sniglet.text-white Preview
                 img#artPreview.d-block.w-100(src="#", alt="")
-            button#submitArtwork.btn.btn-primary(type='submit') Submit Artwork
+            .text-right.pt-3
+                button#submitArtwork.btn.submit-btn.border.border-light(type='submit') Submit Artwork
+            .form-group.pt-4
+                #statusBox.alert.alert-danger.d-none(role="alert")
+            .form-group.py-2.fredoka(style="background-color:rgba(0,0,0,0.5)")
+                .text-center Transaction
+                hr.bg-dark
+                #receiptBox.p-2(style="display:none;font-size:0.8em;")
+                    | IPFS Hash: QmRcBLTzmmufgr7GZVGvT9qGKxj8XsGToPt6eAu48eUBDA
 block scripts
+    script(src="./scripts/app.js")
     script(src="./scripts/upload.js")
