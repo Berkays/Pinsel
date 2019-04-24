@@ -1,78 +1,30 @@
-var Web3 = require('web3');
-
-require('particles.js');
-particlesJS.load('particles-js', './scripts/particlesjs-config.json');
+const ipfsClient = require('ipfs-http-client');
+const buffer = require('buffer');
 
 require('owl.carousel/dist/owl.carousel');
 
-App = {
-    web3Provider: null,
-    contracts: {},
+const ipfsURL = 'http://127.0.0.1:8080/ipfs/';
 
-    init: async function () {
-        return await App.initWeb3();
-    },
-
-    initWeb3: async function () {
-        // Modern dapp browsers...
-        if (window.ethereum) {
-            App.web3Provider = window.ethereum;
-            try {
-                // Request account access
-                console.log("Requesting Access...");
-                await window.ethereum.enable();
-                console.log("Access given.");
-                onMetamaskEnable();
-            } catch (error) {
-                // User denied account access...
-                console.error("User denied account access")
-                onAccessDenied();
-            }
-        }
-        // Legacy dapp browsers...
-        else if (window.web3) {
-            console.log("Legacy Dapp Browser Deteced...");
-            App.web3Provider = window.web3.currentProvider;
-        }
-        // If no injected web3 instance is detected, fall back to Ganache
-        else {
-            console.log("Using Ganache...");
-            onMetamaskNotFound();
-            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-        }
-        web3 = new Web3(App.web3Provider);
-
-        return App.initContract();
-    },
-
-    initContract: function () {
-        /*
-         * Replace me...
-         */
-
-        return App.bindEvents();
-    },
-
-    bindEvents: function () {
+$(document).ready(async () => {
+    const ipfs = initIPFS();
+    await App.init();
+    
+    const artworkHashes = await App.getArtworks(); // Return IPFS hashes of uploaded images.
+    
+    for (let index = 0; index < artworkHashes.length; index++) {
+        const hash = artworkHashes[index];
+        var details = await App.getArtworkDetails(hash);
+        details = convertArtworkDetails(hash,details);
+        console.log(hash);
+        addArtworkElement(hash, details);
     }
-};
 
-$(function () {
-    $(window).on('load', () => {
-        setTimeout(() => {
-            App.init();
-        },3000);
-    });
-});
-
-$(document).ready(() => {
-    initImages();
-
+    initSlideshow();
     // Modal Test
     //$('#modalTest').click();
 });
 
-function initImages() {
+function initSlideshow() {
     $('.owl-carousel').owlCarousel({
         center: true,
         items: 3,
@@ -83,30 +35,53 @@ function initImages() {
         autoplayTimeout: 5000,
         autoplayHoverPause: true,
     });
+};
+
+function initIPFS() {
+    return ipfsClient('/ip4/127.0.0.1/tcp/5001');
+};
+
+function convertArtworkDetails(hash,details) {
+    artName = web3.utils.hexToUtf8(details[0]);
+    artAuthor = web3.utils.hexToUtf8(details[1]); 
+    artDescription = web3.utils.hexToUtf8(details[2]); 
+    artAvgTransfer = details[4].toNumber(); 
+    artTransferCount = details[5].toNumber();
+
+    artImage = ipfsURL + hash;
+
+    const _details = {
+        name:artName,
+        author:artAuthor,
+        description:artName,
+        avgTransfer:artAvgTransfer,
+        transferCount:artTransferCount,
+        image:artImage
+    };
+
+    return _details;
 }
 
-function onMetamaskNotFound() {
-    $('#accessStatusText').children().text('Metamask not enabled. Install Metamask extension.');
-    $('#metamask .spinner').hide();
-    $('#failure').show();
-}
+function addArtworkElement(hash,details) {
+    const $div = $("<div>", { "class": "slide-img" });
+    const $a = $("<a>", { "id": "modalTest", "data-toggle": "modal", "data-target": "#artModal", "data-artwork": JSON.stringify(details) });
+    const $img = $("<img>", { "class": "rounded-lg shadow-lg", "src":"#" });
+    const $span = $("<span>", { "class": "pt-1" });
+    const $br = $("<br>", { "class": "mt-1" });
+    const $i = $("<i>");
 
-function onAccessDenied() {
-    $('#accessStatusText').children().text('Access Denied.\nRefresh page and allow Metamask extension.');
-    $('#metamask .spinner').hide();
-    $('#failure').show();
-}
 
-function onMetamaskEnable() {
-    // $('#accessStatusText').hide();
-    // $('#metamask .spinner').hide();
-    // $('#failure').hide();
-    $('#metamask').hide();
+    $img.attr('src', details.image);
+    $span.text(details.name);
+    $i.text('From ' + details.author);
+
+    const $el = $div.append($a.append($img).append($span.append($br).append($i)));
+    $('#featured').append($el);
 }
 
 $('#artModal').on('show.bs.modal', function (event) {
     var sender = $(event.relatedTarget); // Button that triggered the modal
-
+    console.log("clicked");
     var data = JSON.parse($(sender).attr('data-artwork'));
 
     var modal = $(this);
@@ -116,11 +91,11 @@ $('#artModal').on('show.bs.modal', function (event) {
     modal.find('#artModalDescription').text(data.description);
     modal.find('#artModalUploadDate').text("Uploaded At " + data.upload_date);
     modal.find('#artModalAuthor').text("By " + data.author);
-    modal.find('#artModalImage').attr('src',data.file);
+    modal.find('#artModalImage').attr('src', data.image);
 
 
     var minLimit = (data.total_donation / data.donation_count) - 5;
-    if(minLimit < 0.1)
+    if (minLimit < 0.1)
         minLimit = 0.1;
     var maxLimit = (data.total_donation / data.donation_count) + 5;
 
@@ -128,11 +103,11 @@ $('#artModal').on('show.bs.modal', function (event) {
 
     var donationSlider = modal.find('#donationSlider');
     var donationSliderLabel = $("label[for=donationSlider]");
-    
-    donationSlider.attr('min',minLimit);
-    donationSlider.attr('max',maxLimit);
+
+    donationSlider.attr('min', minLimit);
+    donationSlider.attr('max', maxLimit);
     donationSlider.attr('step', (data.total_donation / data.donation_count) / 50);
-    
+
     donationSlider.on('input', () => {
         newVal = donationSlider.val();
         donationSliderLabel.html("Transaction Amount: <b>" + newVal + " Ether</b>");
@@ -148,9 +123,9 @@ $('#artModal').on('show.bs.modal', function (event) {
         e.preventDefault();
 
         var body = {
-            "name":data.name,
-            "donation":donationSlider.val()
-        }; 
+            "name": data.name,
+            "donation": donationSlider.val()
+        };
 
         $.ajax({
             type: "POST",
@@ -164,4 +139,4 @@ $('#artModal').on('show.bs.modal', function (event) {
         });
     });
 
-})
+});
