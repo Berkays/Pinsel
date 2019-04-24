@@ -1,12 +1,24 @@
-require('./app.js');
 const ipfsClient = require('ipfs-http-client');
 const buffer = require('buffer');
+const bsCustomFileInput = require('bs-custom-file-input');
+
+require('particles.js');
+particlesJS.load('particles-js', '../config/particlesjs-config2.json');
 
 $(document).ready(function () {
-    $('#uploadForm').on('submit', function (event) {
+    bsCustomFileInput.init()
+
+    $('#uploadForm').on('submit', async function (event) {
         event.preventDefault();
 
-        const ipfs = ipfsClient('/ip4/127.0.0.1/tcp/5001')
+        hideStatus();
+        // If metamask not initalized
+        await App.init();
+        if (!App.isInit) {
+            console.error("Metamask not initalized.");
+            showStatus("Metamask not initalized.", true);
+            return;
+        }
 
         var formData = new FormData($(this)[0]);
 
@@ -15,47 +27,44 @@ $(document).ready(function () {
         const imgAuthor = web3.utils.asciiToHex(formData.get('author'), 16);
         const imgDescription = web3.utils.asciiToHex(formData.get('description'));
         const imgFile = formData.get('file');
+        console.log(imgFile);
 
         var reader = new FileReader();
-        reader.onloadend = () => {
-            const buf = buffer.Buffer(reader.result);
-            const ipfsFile = {
-                path: '/uploads/' + imgName,
-                content: buf
-            };
+        reader.onloadend = async () => {
+            const fileContent = buffer.Buffer(reader.result);
 
             // Retrieve IPFS Hash of the image
-            const ipfsOperation = ipfs.add(ipfsFile, { onlyHash: true });
+            var imgHash = '';
+            try {
+                const ipfs = ipfsClient('/ip4/127.0.0.1/tcp/5001')
+                var ipfsOperation = await ipfs.add(fileContent, { onlyHash: true });
+                imgHash = ipfsOperation[0].hash;
 
-            ipfsOperation.then((results) => {
-                const imgHash = results[0].hash
-
-                App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription, (err,result) => {
-                    
-                    if(err)
-                    {
-                        console.error(err);
-                        return
-                    }
-
-                    console.log(result);
-                    //Submit to IPFS
-                    ipfs.add(ipfsFile).then((results) => {
-                        console.log("Uploaded file to IPFS. Hash: " + imgHash);
-                    })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                });
-            })
-                .catch((err) => {
-                    console.error(err);
-                });
+                try {
+                    showStatus('Waiting for contract...', false);
+                    const contractOperation = await App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription);
+                    showStatus('Uploading artwork to IPFS...', false);
+                    ipfsOperation = await ipfs.add(fileContent, { pin: true });
+                    showStatus('Uploaded to IPFS.', false);
+                    showReceipt(imgHash);
+                }
+                catch (e) {
+                    console.log(e);
+                    const msg = e.toString();
+                    const err_msg = msg.slice(msg.indexOf('revert ') + 7, msg.Length);
+                    showStatus(err_msg, true);
+                }
+            }
+            catch (e) {
+                console.error(e);
+                showStatus("IPFS Connection error.", true);
+                return;
+            }
         }
 
         reader.readAsArrayBuffer(imgFile);
-        // Notify Server
 
+        // Notify Server
         // $.ajax({
         //     url: 'http://localhost:3000/upload',
         //     method: 'POST',
@@ -74,6 +83,29 @@ $(document).ready(function () {
         //     });
     });
 });
+
+function showStatus(text, danger) {
+    $('#statusBox').removeClass();
+    if (danger)
+        $('#statusBox').addClass('alert alert-danger');
+    else
+        $('#statusBox').addClass('alert alert-success');
+    $('#statusBox').text(text);
+    $('#statusBox').show();
+};
+
+function hideStatus() {
+    $('#statusBox').hide();
+};
+
+function showReceipt(hash) {
+    $('#receiptBox').show();
+    $('#receiptBox').text('IPFS Hash: ' + hash);
+}
+
+function hideReceipt() {
+    $('#receiptBox').hide();
+}
 
 preview = function (event) {
     var src = URL.createObjectURL(event.target.files[0]);
