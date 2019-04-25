@@ -80,10 +80,10 @@ App = {
         return contract.getArtworkDetails(imageHash, { from: account });
     },
 
-    submitArtwork: async function (imageHash, imageName, imageAuthor, imageDescription) {
+    submitArtwork: async function (imageHash, imageName, imageAuthor, imageDescription,imageTransferLimit) {
         var account = await App.getAccount();
         var contract = await App.getDeployed(App.contracts.ArtworkController);
-        return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, { from: account });
+        return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, imageTransferLimit, { from: account });
     },
 
     licenseArtwork: async function (imageHash, value) {
@@ -120,10 +120,4 @@ App = {
     }
 };
 
-$(function () {
-    $(window).on('load', () => {
-        setTimeout(() => {
-            //App.init();
-        }, 1000);
-    });
-});
+module.exports = App;
