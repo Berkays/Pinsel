@@ -29,6 +29,8 @@ const reload = () => {
     return;
 };
 
+const nodemon_watched = ['./bin/www','./routes/*.js'];
+
 const compiled_assets = {
     less: './public/src/stylesheets/*.less',
     less_entry: './public/src/stylesheets/style.less',
@@ -47,11 +49,9 @@ const _move = () => {
 
 const _js = () => {
     var files = glob.sync(compiled_assets.js);
-    console.log("Browserify:")
     var tasks = files.map(function (entry) {
         var dir = path.relative(base_path, entry);
         dir = path.dirname(dir);
-        console.log(entry);
 
         return browserify({ entries: [entry] })
             .bundle().on('error', (error) => console.error(error))
@@ -118,14 +118,13 @@ const _watch = () => {
     gulp.watch(compiled_assets.image, gulp.series(_image));
     gulp.watch(moved_assets, gulp.series(_move));
     gulp.watch(compiled_assets.pug).on('change', reload);
-
-}
+};
 
 const _server = (cb) => {
     var started = false;
     return nodemon({
         script: './bin/www',
-        ignore: '*.js',
+        watch: nodemon_watched,
         env: { 'NODE_ENV': 'development' }
     }).on('start', () => {
         if (!started) {
