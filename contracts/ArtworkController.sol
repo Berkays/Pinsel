@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2; // Don't use in production
 
 // Library for IPFS Hash
 // IPFS hashes take 46 bytes of space.
-library HashLib {
+library IpfsHash {
     struct Hash {
         bytes32 fHash;
         bytes12 sHash;
@@ -20,7 +20,7 @@ library HashLib {
 
 
 contract ArtworkController {
-    using HashLib for HashLib.Hash;
+    using IpfsHash for IpfsHash.Hash;
 
     event ArtworkLicensed();
     event ArtworkSubscribed();
@@ -30,10 +30,11 @@ contract ArtworkController {
         bytes32 imageName;
         bytes16 imageAuthor;
         string imageDescription;
-        bool flexPayment;
+        uint32 transferLimit;
         uint avgTransfer;
         uint transferSum;
         uint transferCount;
+        bool flexPayment;
     }
 
     mapping(string => Artwork) private artworks;
@@ -51,6 +52,12 @@ contract ArtworkController {
     modifier artworkNotExists(string memory artworkHash)
     {
         require(artworks[artworkHash].owner == address(0),"Artwork already exists.");
+        _;
+    }
+
+    modifier artworkLimitAvailable(string memory artworkHash)
+    {
+        require(artworks[artworkHash].transferLimit > 0, "Artwork Limit is reached");
         _;
     }
 
@@ -83,11 +90,14 @@ contract ArtworkController {
         _;
     }
 
-    function addArtwork(string memory artworkHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription)
+    function addArtwork(string memory artworkHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription,uint32 artTransferLimit)
         public
         artworkNotExists(artworkHash)
     {
-        artworks[artworkHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,false,0,0,0);
+        if(artTransferLimit == 0)
+            artTransferLimit = ~uint32(0); // Infinite transfer limit if 0
+
+        artworks[artworkHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,artTransferLimit,0,0,0,false);
         artworkHashes.push(artworkHash);
         emit ArtworkSubscribed();
     }
@@ -118,17 +128,20 @@ contract ArtworkController {
         public
         view
         artworkExists(artworkHash)
-        returns(bytes32,bytes16,string memory,bool,uint,uint)
+        returns(bytes32,bytes16,string memory,uint32,uint,uint,bool)
     {
-        return (artworks[artworkHash].imageName,artworks[artworkHash].imageAuthor,artworks[artworkHash].imageDescription,artworks[artworkHash].flexPayment,artworks[artworkHash].avgTransfer,artworks[artworkHash].transferCount);
+        return (artworks[artworkHash].imageName,artworks[artworkHash].imageAuthor,artworks[artworkHash].imageDescription,
+                artworks[artworkHash].transferLimit,artworks[artworkHash].avgTransfer,
+                artworks[artworkHash].transferCount,artworks[artworkHash].flexPayment);
     }  
 
     function license(string memory artworkHash) 
         public 
         payable 
         artworkExists(artworkHash)
-        // inDonationLimit(artworkId,msg.value)
         differentPerson(msg.sender,artworks[artworkHash].owner)
+        artworkLimitAvailable(artworkHash)
+        // inDonationLimit(artworkId,msg.value)
     {
         assert(msg.value > 0);
         assert(msg.value <= address(this).balance);
@@ -137,6 +150,7 @@ contract ArtworkController {
         artwork.owner.transfer(msg.value);
         artwork.transferSum += msg.value;
         artwork.transferCount++;
+        artwork.transferLimit--;
         artwork.avgTransfer = artwork.transferSum / artwork.transferCount;
         emit ArtworkLicensed();
     }
