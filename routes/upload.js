@@ -4,7 +4,7 @@ const path = require('path');
 
 /* GET Upload page. */
 router.get('/', function (req, res, next) {
-    res.render('upload', { title: 'ArtChain Upload', activeNav: 'upload' });
+    res.render('upload', { title: 'Pinsel - Upload', activeNav: 'upload' });
 });
 
 router.post('/', function (req, res) {

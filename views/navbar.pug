@@ -1,8 +1,8 @@
 nav(class="navbar navbar-dark navbar-expand-lg fixed-top p-0" role="navigation")
     div.navbar-wrapper.ml-auto.mr-auto.d-flex.flex-row
         div.d-flex.flex-row
-            a.navbar-brand.d-flex.align-items-center.hvr-bob(href="#")
-                | Art Chain
+            a.navbar-brand.p-0.d-flex.align-items-center.hvr-bob(href="/")
+                img(src="/images/layout/pinselLogo.png", alt="")
 
         button.navbar-toggler(type='button' data-toggle='collapse' data-target='.navbar-collapse')
             span.navbar-toggler-icon
@@ -11,40 +11,35 @@ nav(class="navbar navbar-dark navbar-expand-lg fixed-top p-0" role="navigation")
                 div.bg-dark.py-4
                     ul(style="list-style:none")
                         li.mb-3
-                            a(href='/') Ana Sayfa                           
+                            a(href='/') Home Page
                         li.mb-3
-                            a(href='/about') Hakkımızda                           
+                            a(href='/about') About
                         li.mb-3.pl-2
-                            a(href='/web') - Web Tasarım ve Programlama                           
+                            a(href='/gallery') - Browse
                         li.mb-3.pl-2
-                            a(href='/mobile') - Mobil Uygulamalar                           
+                            a(href='/upload') - Upload                        
                         li.mb-3.pl-2
-                            a(href='/design') - Grafik Tasarım                           
+                            a(href='/usage') - How To Use
                         li.mb-3.pl-2
-                            a(href='/architecture') - Mimari Görselleştirme                         
+                            a(href='https://github.com/Berkays/ArtChain') - Github
                         li.mb-3.pl-2
-                            a(href='/marketing') - Tanıtım Filmi                           
-                        li.mb-3.pl-2
-                            a(href='/drone') - Drone Çekimi                          
+                            a(href='/tech') - 
                         li
-                            a(href='/contact') Iletisim
+                            a(href='/contact') Contact
         div.navbar-collapse.collapse.d-flex.flex-row.justify-content-end
             ul.nav.navbar-nav.d-flex.h-100
                 li(class=(activeNav == 'home') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/') Home
+                li(class=(activeNav == 'about') ? "active" : "").nav-item.h-100.hvr-underline-from-center
+                    a.nav-link.h-100.d-flex.align-items-center(href='/about') About
                 li(class=(activeNav == 'browse') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/gallery') Browse
                 li(class=(activeNav == 'upload') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/upload') Upload
                 li(class=(activeNav === 'usage') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/usage') How To Use
-                li.nav-item.h-100.hvr-underline-from-center
-                    a.nav-link.h-100.d-flex.align-items-center(href='https://github.com/Berkays/ArtChain', target="_blank") Github
-                li(class=(activeNav === 'tech') ? "active" : "").nav-item.h-100.nav-dropdown
-                    a.nav-link.h-100.d-flex.align-items-center(href='/tech') Technologies
-                        ul.list-group.sniglet
-                            a.list-group-item.list-group-item-action(href="#") Frontend
-                            a.list-group-item.list-group-item-action(href="#") Backend
+                li(class=(activeNav === 'account') ? "active" : "").nav-item.h-100.hvr-underline-from-center
+                    a.nav-link.h-100.d-flex.align-items-center(href='/account') My Items
                 li(class=(activeNav === 'contact') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/contact') Contact
         button.navbar-toggler.mr-5(type='button' data-toggle='collapse' data-target='#navbarCollapse')
