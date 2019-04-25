@@ -15,8 +15,8 @@ $(document).ready(function () {
         // If metamask not initalized
         await App.init();
         if (!App.isInit) {
-            console.error("Metamask not initalized.");
-            showStatus("Metamask not initalized.", true);
+            console.error("Metamask not initalized");
+            showStatus("Metamask not initalized", true);
             return;
         }
 
@@ -26,8 +26,9 @@ $(document).ready(function () {
         const imgName = web3.utils.asciiToHex(formData.get('name'), 32);
         const imgAuthor = web3.utils.asciiToHex(formData.get('author'), 16);
         const imgDescription = web3.utils.asciiToHex(formData.get('description'));
+        const imgTransferLimit = formData.get('limit');
+        const imgFee = formData.get('fee');
         const imgFile = formData.get('file');
-        console.log(imgFile);
 
         var reader = new FileReader();
         reader.onloadend = async () => {
@@ -42,10 +43,10 @@ $(document).ready(function () {
 
                 try {
                     showStatus('Waiting for contract...', false);
-                    const contractOperation = await App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription);
+                    const contractOperation = await App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription,imgTransferLimit);
                     showStatus('Uploading artwork to IPFS...', false);
                     ipfsOperation = await ipfs.add(fileContent, { pin: true });
-                    showStatus('Uploaded to IPFS.', false);
+                    showStatus('Uploaded to IPFS', false);
                     showReceipt(imgHash);
                 }
                 catch (e) {
@@ -57,7 +58,7 @@ $(document).ready(function () {
             }
             catch (e) {
                 console.error(e);
-                showStatus("IPFS Connection error.", true);
+                showStatus("IPFS Connection error", true);
                 return;
             }
         }
@@ -99,12 +100,12 @@ function hideStatus() {
 };
 
 function showReceipt(hash) {
-    $('#receiptBox').show();
-    $('#receiptBox').text('IPFS Hash: ' + hash);
+    $('#receiptBox').removeClass('d-none');
+    $('#receiptText').text('IPFS Hash: ' + hash);
 }
 
 function hideReceipt() {
-    $('#receiptBox').hide();
+    $('#receiptBox').addClass('d-none');
 }
 
 preview = function (event) {

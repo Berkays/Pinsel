@@ -4,34 +4,45 @@ block styles
 
 block content
     div#particles-js.particles-js-background
-    
     include metamaskStatus
     .row.justify-content-md-center.navbar-push
-        form#uploadForm.col-lg-5.col-md-8.col-sm-10.p-5.rounded.text-white(action='#' method='post' encType="multipart/form-data", style="background-color:rgba(0,0,0,0.5);")
+        form#uploadForm.col-lg-5.col-md-8.col-sm-10.p-5.rounded.text-white(action='#' method='post' encType="multipart/form-data", style="background-color:rgba(0,0,0,0.6);")
             .form-group
                 p.h2.pt-3.text-center.kreon Submit Artwork
                 hr.bg-dark
-                input#artName.form-control.rounded-0.sniglet.text-white.mt-4(type='text' name="name" placeholder='Artwork Name' required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
+                input#artName.form-control.rounded-0.sniglet.text-white.mt-4(type='text' name="name" placeholder='Artwork Name' maxlength="32" required)
+                small.form-text.text-muted Maximum 32 characters allowed.
             .form-group.pt-4
-                input#artAuthor.form-control.rounded-0.sniglet.text-white(type='text' name="author" placeholder='Author' required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
+                input#artAuthor.form-control.rounded-0.sniglet.text-white(type='text' name="author" placeholder='Author' maxlength="16" required)
+                small.form-text.text-muted Maximum 16 characters allowed.            
             .form-group.pt-4
-                textarea#artDesc.form-control.rounded-0.sniglet.text-white(name="description" placeholder="Artwork Description" required, style="background:transparent; border:1px solid #333; border-bottom:1px solid #fff; font-size:18px")
+                textarea#artDesc.form-control.rounded-0.sniglet.text-white(name="description" placeholder="Artwork Description" required)
             .form-group.pt-4
                 .custom-file
                     label#artFileLabel.custom-file-label.sniglet.text-white(for='artFile', style="background:transparent; border:1px solid #bbb; font-size:18px") Artwork to Submit
-                    input#artFile.custom-file-input.rounded-0(type='file' name="file" accept="image/*" onchange="preview(event)" required, style="background:transparent; border: none; border-bottom:1px solid #fff; font-size:18px")
-            .form-group.text-center
-                label(for='artPreview', style="font-size:18px;").mt-4.d-none.sniglet.text-white Preview
-                img#artPreview.d-block.w-100(src="#", alt="")
-            .text-right.pt-3
+                    input#artFile.custom-file-input.rounded-0(type='file' name="file" accept="image/*" onchange="preview(event)" required)
+            .form-group.pt-4
+                .input-group.w-33.rounded(style="border:1px solid #bbb;")
+                    input.form-control.sniglet.text-white.text-center.border-0(type="number" name="fee" placeholder="Artwork Fee" min="0.005" step="0.005" required)
+                    div.input-group-append
+                        span.input-group-text.text-white(style="background-color:#242836; border:none; font-size:18px") Ether
+                small.form-text.text-muted Value in Ether. Minimum value is 0.005 Ether. %2 Comission fee is applied when a transaction is made if transaction is made directly.
+            .form-group.pt-4
+                .input-group.w-33.rounded(style="border:1px solid #bbb;")
+                    input.form-control.sniglet.text-white.text-center.border-0(type="number" name="limit" placeholder="Artwork Limit" min="0" required)
+                small.form-text.text-muted Maximum amount of transactions that can be made for this artwork. 0 = Unlimited
+            .form-group.pt-4.text-right
                 button#submitArtwork.btn.submit-btn.border.border-light(type='submit') Submit Artwork
             .form-group.pt-4
                 #statusBox.alert.alert-danger.d-none(role="alert")
-            .form-group.py-2.fredoka(style="background-color:rgba(0,0,0,0.5)")
+            .form-group#receiptBox.py-2.d-none.fredoka(style="background-color:rgba(0,0,0,0.5)")
                 .text-center Transaction
                 hr.bg-dark
-                #receiptBox.p-2(style="display:none;font-size:0.8em;")
+                #receiptText.p-2(style="font-size:0.8em;")
                     | IPFS Hash: QmRcBLTzmmufgr7GZVGvT9qGKxj8XsGToPt6eAu48eUBDA
+            .form-group.text-center
+                label(for='artPreview', style="font-size:18px;").d-none.sniglet.text-white Preview
+                img#artPreview.d-block.w-100(src="#", alt="")
 block scripts
     script(src="./scripts/app.js")
     script(src="./scripts/upload.js")

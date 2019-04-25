@@ -8,7 +8,7 @@ const ipfsURL = 'http://127.0.0.1:8080/ipfs/';
 $(document).ready(async () => {
     const ipfs = initIPFS();
     await App.init();
-    
+
     const artworkHashes = await App.getArtworks(); // Return IPFS hashes of uploaded images.
     
     for (let index = 0; index < artworkHashes.length; index++) {
@@ -20,8 +20,6 @@ $(document).ready(async () => {
     }
 
     initSlideshow();
-    // Modal Test
-    //$('#modalTest').click();
 });
 
 function initSlideshow() {
@@ -133,7 +131,6 @@ $('#artModal').on('show.bs.modal', function (event) {
             data: body,
             cache: false,
             success: function (result) {
-                //swal("Good job!", "You clicked the button!", "success");
                 console.log("Success");
             }
         });
