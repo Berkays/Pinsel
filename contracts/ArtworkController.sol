@@ -30,11 +30,12 @@ contract ArtworkController {
         bytes32 imageName;
         bytes16 imageAuthor;
         string imageDescription;
-        uint32 transferLimit;
+        uint uploadDate;
+        uint transferLimit;
         uint avgTransfer;
         uint transferSum;
         uint transferCount;
-        bool flexPayment;
+        bool staticFee;
     }
 
     mapping(string => Artwork) private artworks;
@@ -43,27 +44,27 @@ contract ArtworkController {
     constructor() public {
     }
 
-    modifier artworkExists(string memory artworkHash)
+    modifier artworkExists(string memory imageHash)
     {
-        require(artworks[artworkHash].owner != address(0),"Artwork does not exist.");
+        require(artworks[imageHash].owner != address(0),"Artwork does not exist.");
         _;
     }
 
-    modifier artworkNotExists(string memory artworkHash)
+    modifier artworkNotExists(string memory imageHash)
     {
-        require(artworks[artworkHash].owner == address(0),"Artwork already exists.");
+        require(artworks[imageHash].owner == address(0),"Artwork already exists.");
         _;
     }
 
-    modifier artworkLimitAvailable(string memory artworkHash)
+    modifier artworkLimitAvailable(string memory imageHash)
     {
-        require(artworks[artworkHash].transferLimit > 0, "Artwork Limit is reached");
+        require(artworks[imageHash].transferLimit > 0, "Artwork Limit is reached");
         _;
     }
 
-    modifier inDonationLimit(string memory artworkHash,uint amount)
+    modifier inDonationLimit(string memory imageHash,uint amount)
     {
-        uint avgTransfer = artworks[artworkHash].avgTransfer;
+        uint avgTransfer = artworks[imageHash].avgTransfer;
         // int min = int(avgTransfer) - 5;
         uint max = avgTransfer + 5;
         // if(min < 1) // uint overflow
@@ -84,27 +85,27 @@ contract ArtworkController {
         _;
     }
 
-    modifier onlyOwner(string memory artworkHash, address sender)
+    modifier onlyOwner(string memory imageHash, address sender)
     {
-        require(sender == artworks[artworkHash].owner, "Only artwork owner can delete the image");
+        require(sender == artworks[imageHash].owner, "Only artwork owner can delete the image");
         _;
     }
 
-    function addArtwork(string memory artworkHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription,uint32 artTransferLimit)
+    function addArtwork(string memory imageHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription,uint imageUploadDate,uint imageTransferLimit)
         public
-        artworkNotExists(artworkHash)
+        artworkNotExists(imageHash)
     {
-        if(artTransferLimit == 0)
-            artTransferLimit = ~uint32(0); // Infinite transfer limit if 0
+        if(imageTransferLimit == 0)
+            imageTransferLimit = ~uint32(0); // Infinite transfer limit if 0
 
-        artworks[artworkHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,artTransferLimit,0,0,0,false);
-        artworkHashes.push(artworkHash);
+        artworks[imageHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,imageUploadDate,imageTransferLimit,0,0,0,false);
+        artworkHashes.push(imageHash);
         emit ArtworkSubscribed();
     }
 
-    function deleteArtwork(string memory artworkHash)
+    function deleteArtwork(string memory imageHash)
         public
-        onlyOwner(artworkHash,msg.sender)
+        onlyOwner(imageHash,msg.sender)
     {
     }
 
@@ -124,29 +125,33 @@ contract ArtworkController {
         return artworkHashes.length;
     }
 
-    function getArtworkDetails(string memory artworkHash)
+    function getArtworkDetails(string memory imageHash)
         public
         view
-        artworkExists(artworkHash)
-        returns(bytes32,bytes16,string memory,uint32,uint,uint,bool)
+        artworkExists(imageHash)
+        returns(bytes32,bytes16,string memory,uint,uint,uint,uint)
     {
-        return (artworks[artworkHash].imageName,artworks[artworkHash].imageAuthor,artworks[artworkHash].imageDescription,
-                artworks[artworkHash].transferLimit,artworks[artworkHash].avgTransfer,
-                artworks[artworkHash].transferCount,artworks[artworkHash].flexPayment);
+        return (artworks[imageHash].imageName,
+                artworks[imageHash].imageAuthor,
+                artworks[imageHash].imageDescription,
+                artworks[imageHash].uploadDate,
+                artworks[imageHash].transferLimit,
+                artworks[imageHash].avgTransfer,
+                artworks[imageHash].transferCount);
     }  
 
-    function license(string memory artworkHash) 
+    function license(string memory imageHash) 
         public 
         payable 
-        artworkExists(artworkHash)
-        differentPerson(msg.sender,artworks[artworkHash].owner)
-        artworkLimitAvailable(artworkHash)
+        artworkExists(imageHash)
+        differentPerson(msg.sender,artworks[imageHash].owner)
+        artworkLimitAvailable(imageHash)
         // inDonationLimit(artworkId,msg.value)
     {
         assert(msg.value > 0);
         assert(msg.value <= address(this).balance);
 
-        Artwork storage artwork = artworks[artworkHash];
+        Artwork storage artwork = artworks[imageHash];
         artwork.owner.transfer(msg.value);
         artwork.transferSum += msg.value;
         artwork.transferCount++;
