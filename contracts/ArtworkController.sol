@@ -1,6 +1,8 @@
 pragma solidity ^0.5;
 pragma experimental ABIEncoderV2; // Don't use in production
 
+import "./AccountController.sol";
+
 // Library for IPFS Hash
 // IPFS hashes take 46 bytes of space.
 library IpfsHash {
@@ -20,28 +22,37 @@ library IpfsHash {
 
 
 contract ArtworkController {
+    AccountController accountController;
+
     using IpfsHash for IpfsHash.Hash;
 
     event ArtworkLicensed();
     event ArtworkSubscribed();
     
+    uint constant ones = ~uint32(0);
+    uint constant detailClear = ~uint(0) << 128;
+
     struct Artwork {
         address payable owner;
         bytes32 imageName;
         bytes16 imageAuthor;
         string imageDescription;
         uint uploadDate;
-        uint transferLimit;
+        ArtworkDetails details;
+    }
+
+    struct ArtworkDetails {
+        uint fee;
         uint avgTransfer;
-        uint transferSum;
+        uint transferLimit;
         uint transferCount;
-        bool staticFee;
     }
 
     mapping(string => Artwork) private artworks;
     string[] public artworkHashes;
 
-    constructor() public {
+    constructor(address accountControllerContractAddress) public {
+        accountController = AccountController(accountControllerContractAddress);
     }
 
     modifier artworkExists(string memory imageHash)
@@ -58,13 +69,13 @@ contract ArtworkController {
 
     modifier artworkLimitAvailable(string memory imageHash)
     {
-        require(artworks[imageHash].transferLimit > 0, "Artwork Limit is reached");
+        require(artworks[imageHash].details.transferLimit > 0, "Artwork Limit is reached");
         _;
     }
 
     modifier inDonationLimit(string memory imageHash,uint amount)
     {
-        uint avgTransfer = artworks[imageHash].avgTransfer;
+        uint avgTransfer = artworks[imageHash].details.avgTransfer;
         // int min = int(avgTransfer) - 5;
         uint max = avgTransfer + 5;
         // if(min < 1) // uint overflow
@@ -79,9 +90,16 @@ contract ArtworkController {
         _;
     }
 
-    modifier differentPerson(address sender,address receiver)
+    modifier valueMeetsfee(string memory imageHash,uint amount)
     {
-        require(sender != receiver, "Sender and receiver cannot be the same account");
+        uint fee = artworks[imageHash].details.fee;
+        require(fee == 0 || fee == amount,"Given value does not meet artwork fee.");
+        _;
+    }
+
+    modifier differentPerson(address sender,string memory imageHash)
+    {
+        require(sender != artworks[imageHash].owner, "Sender and receiver cannot be the same account");
         _;
     }
 
@@ -91,14 +109,15 @@ contract ArtworkController {
         _;
     }
 
-    function addArtwork(string memory imageHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription,uint imageUploadDate,uint imageTransferLimit)
+    function addArtwork(string memory imageHash,bytes32 imageName,bytes16 imageAuthor,string memory imageDescription,uint imageUploadDate,uint imageTransferLimit,uint imageFee)
         public
         artworkNotExists(imageHash)
     {
         if(imageTransferLimit == 0)
-            imageTransferLimit = ~uint32(0); // Infinite transfer limit if 0
+            imageTransferLimit = ones; // Infinite transfer limit if 0
 
-        artworks[imageHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,imageUploadDate,imageTransferLimit,0,0,0,false);
+        ArtworkDetails memory details = ArtworkDetails(imageFee,0,imageTransferLimit,0);
+        artworks[imageHash] = Artwork(msg.sender,imageName,imageAuthor,imageDescription,imageUploadDate,details);
         artworkHashes.push(imageHash);
         emit ArtworkSubscribed();
     }
@@ -129,34 +148,36 @@ contract ArtworkController {
         public
         view
         artworkExists(imageHash)
-        returns(bytes32,bytes16,string memory,uint,uint,uint,uint)
+        returns(bytes32,bytes16,string memory,uint,ArtworkDetails memory)
     {
         return (artworks[imageHash].imageName,
                 artworks[imageHash].imageAuthor,
                 artworks[imageHash].imageDescription,
                 artworks[imageHash].uploadDate,
-                artworks[imageHash].transferLimit,
-                artworks[imageHash].avgTransfer,
-                artworks[imageHash].transferCount);
+                artworks[imageHash].details);
     }  
 
     function license(string memory imageHash) 
         public 
         payable 
+        differentPerson(msg.sender,imageHash)
         artworkExists(imageHash)
-        differentPerson(msg.sender,artworks[imageHash].owner)
         artworkLimitAvailable(imageHash)
+        valueMeetsfee(imageHash,msg.value)
         // inDonationLimit(artworkId,msg.value)
     {
         assert(msg.value > 0);
         assert(msg.value <= address(this).balance);
 
+        accountController.ownArtwork(imageHash);
+
         Artwork storage artwork = artworks[imageHash];
         artwork.owner.transfer(msg.value);
-        artwork.transferSum += msg.value;
-        artwork.transferCount++;
-        artwork.transferLimit--;
-        artwork.avgTransfer = artwork.transferSum / artwork.transferCount;
+
+        artwork.details.avgTransfer = ((artwork.details.avgTransfer * artwork.details.transferCount) + msg.value) / (artwork.details.transferCount + 1);
+        artwork.details.transferCount++;
+        artwork.details.transferLimit--;
+
         emit ArtworkLicensed();
     }
 
