@@ -10,10 +10,10 @@ block content
             .form-group
                 p.h2.pt-3.text-center.kreon Submit Artwork
                 hr.bg-dark
-                input#artName.form-control.rounded-0.sniglet.text-white.mt-4(type='text' name="name" placeholder='Artwork Name' maxlength="32" required)
+                input#artName.form-control.rounded-0.sniglet.text-white.mt-4(type='text' name="name" placeholder='Artwork Name' maxlength="32" autocomplete="off" required)
                 small.form-text.text-muted Maximum 32 characters allowed.
             .form-group.pt-4
-                input#artAuthor.form-control.rounded-0.sniglet.text-white(type='text' name="author" placeholder='Author' maxlength="16" required)
+                input#artAuthor.form-control.rounded-0.sniglet.text-white(type='text' name="author" placeholder='Author' maxlength="16" autocomplete="off" required)
                 small.form-text.text-muted Maximum 16 characters allowed.            
             .form-group.pt-4
                 textarea#artDesc.form-control.rounded-0.sniglet.text-white(name="description" placeholder="Artwork Description" required)
@@ -22,27 +22,32 @@ block content
                     label#artFileLabel.custom-file-label.sniglet.text-white(for='artFile', style="background:transparent; border:1px solid #bbb; font-size:18px") Artwork to Submit
                     input#artFile.custom-file-input.rounded-0(type='file' name="file" accept="image/*" onchange="preview(event)" required)
             .form-group.pt-4
+                div.custom-control.custom-checkbox
+                    input#artOptionalFee.custom-control-input(type="checkbox")
+                    label.custom-control-label(for="artOptionalFee") Optional Fee
+                small.form-text.text-muted Buyer choose how much to pay. %0.5 Commission is applied for direct transactions.
+            #artFeeContainer.form-group.pt-4
                 .input-group.w-33.rounded(style="border:1px solid #bbb;")
-                    input.form-control.sniglet.text-white.text-center.border-0(type="number" name="fee" placeholder="Artwork Fee" min="0.005" step="0.005" required)
+                    input#artFee.form-control.sniglet.text-white.text-center.border-0(type="number" placeholder="Artwork Fee" min="0.005" max="100" step="0.01")
                     div.input-group-append
                         span.input-group-text.text-white(style="background-color:#242836; border:none; font-size:18px") Ether
-                small.form-text.text-muted Value in Ether. Minimum value is 0.005 Ether. %2 Comission fee is applied when a transaction is made if transaction is made directly.
+                small.form-text.text-muted Value in Ether. Minimum value is 0.005 Ether. %2 Comission fee is applied for direct transactions.
             .form-group.pt-4
                 .input-group.w-33.rounded(style="border:1px solid #bbb;")
-                    input.form-control.sniglet.text-white.text-center.border-0(type="number" name="limit" placeholder="Artwork Limit" min="0" required)
+                    input.form-control.sniglet.text-white.text-center.border-0(type="number" name="limit" placeholder="Artwork Distribution Limit" min="0" required)
                 small.form-text.text-muted Maximum amount of transactions that can be made for this artwork. 0 = Unlimited
             .form-group.pt-4.text-right
                 button#submitArtwork.btn.submit-btn.border.border-light(type='submit') Submit Artwork
             .form-group.pt-4
                 #statusBox.alert.alert-danger.d-none(role="alert")
             .form-group#receiptBox.py-2.d-none.fredoka(style="background-color:rgba(0,0,0,0.5)")
-                .text-center Transaction
+                .text-center Receipt
                 hr.bg-dark
-                #receiptText.p-2(style="font-size:0.8em;")
-                    | IPFS Hash: QmRcBLTzmmufgr7GZVGvT9qGKxj8XsGToPt6eAu48eUBDA
-            .form-group.text-center
+                #receiptText.p-2(style="font-size:0.8em;white-space: pre-line")
+                    | TX: QmRcBLTzmmufgr7GZVGvT9qGKxj8XsGToPt6eAu48eUBDA
+            .form-group.d-flex.flex-column.text-center
                 label(for='artPreview', style="font-size:18px;").d-none.sniglet.text-white Preview
-                img#artPreview.d-block.w-100(src="#", alt="")
+                img#artPreview.d-block.align-self-center.w-75(src="#", alt="")
 block scripts
     script(src="./scripts/app.js")
     script(src="./scripts/upload.js")
