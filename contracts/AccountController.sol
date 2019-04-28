@@ -3,28 +3,54 @@ pragma experimental ABIEncoderV2;
 
 contract AccountController {
 
-    mapping(address => string[]) private accounts;
+    // Holds IPFS Hash of owned images
+    mapping(address => string[]) private ownedItems;
 
     constructor() public {
     }
 
-    // modifier onlyOwner(address sender,address owner)
-    // {
-    //     require(sender == owner,'Only owner can access owned artworks.');
-    //     _;
-    // }
+    // Compare two strings
+    function strcmp(string memory a, string memory b) 
+        public 
+        pure 
+        returns (bool)
+    {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+
+    modifier notOwned(string memory imageHash,address sender)
+    {
+        bool isOwned = false;
+        for(uint i = 0;i<ownedItems[sender].length;i++)
+        {
+            if(strcmp(ownedItems[sender][i],imageHash))
+            {
+                isOwned = true;
+                break;
+            }
+        }
+        require(isOwned,"Artwork is already owned.");
+        _;
+    }
 
     function getOwnedArtworks() 
     view 
-    public 
+    public
     returns(string[] memory) {
-        return accounts[msg.sender];
+        return ownedItems[msg.sender];
     }
 
     function getOwnedArtworksCount() 
     view 
     public 
     returns (uint) {
-        return accounts[msg.sender].length;
+        return ownedItems[msg.sender].length;
+    }
+
+    function ownArtwork(string memory imageHash)
+    public
+    notOwned(imageHash,msg.sender)
+    {
+        ownedItems[msg.sender].push(imageHash);
     }
 }
