@@ -29,7 +29,7 @@ const reload = () => {
     return;
 };
 
-const nodemon_watched = ['./bin/www','./routes/*.js'];
+const nodemon_watched = ['./bin/www','./server.js','./routes/*.js'];
 
 const compiled_assets = {
     less: './public/src/stylesheets/*.less',
