@@ -1,0 +1,25 @@
+extends layout
+
+block styles
+
+block toplevel
+    include artworkModalView 
+
+block content
+    div#particles-js.particles-js-background
+    include metamaskStatus
+    .row.justify-content-md-center.navbar-push
+        .col-6.border.border-1.rounded.p-4.shadow.bg-white
+            p.h1.display-5.text-center Owned Items
+            .p-3.bg-info.text-white
+                #accountStatus.text-center Signed account: None
+            hr
+            ul#ownedItemList.list-group
+                li.list-group-item.d-flex.justify-content-start
+                    img.rounded.shadow-sm(src="images/uploads/img1.jpg", alt="", style="width:128px;height:128px")
+                    h1.display-6.ml-3.my-auto Crying River
+                    .btn.btn-light.border.border-dark.ml-auto.my-auto(data-toggle="modal" data-target="#artModal", data-artwork='???') View Details
+            #ownedItemStatus Currently there are no owned items.
+block scripts
+    script(src="./scripts/app.js")
+    script(src="./scripts/account.js")

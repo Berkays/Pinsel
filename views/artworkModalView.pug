@@ -1,0 +1,33 @@
+#artModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='artModalTitle' aria-hidden='true')
+        .modal-dialog.modal-lg.modal-dialog-centered(role='document')
+            .modal-content.border
+                .modal-header
+                    h3.modal-title Crying River
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body.p-0
+                    .container-fluid.pt-0
+                        .row
+                            .col.pl-0
+                                img#artModalImage.rounded(src="#" alt="" style="width:420px;height:420px")
+                            .col.pt-3
+                                h5.modal-title Crying River
+                                hr
+                                p#artModalDescription 
+                                    | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                    | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                                    | Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                p#artModalUploadDate.text-muted.small.pt-3
+                                    i Uploaded at 31.03.2019
+                                p#artModalAuthor
+                                    i 
+                                        | By Lorem ipsum
+                .modal-footer.d-block
+                    .form-group.d-flex.flex-column
+                        .input-group.px-2.my-2#artModalLimit
+                            | Amount Left: 5
+                        .input-group.px-2.my-2#artModalAverage
+                            | Average Transaction: 0 Ether
+                        .input-group.px-2.my-2#artModalFee
+                            | Artwork Fee: 0 Ether
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Dismiss
