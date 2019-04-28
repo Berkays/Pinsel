@@ -1,17 +1,17 @@
 #artModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='artModalTitle' aria-hidden='true')
         .modal-dialog.modal-lg.modal-dialog-centered(role='document')
-            .modal-content
+            .modal-content.border
                 .modal-header
-                    h5#artModalTitle.modal-title Crying River
+                    h3.modal-title Crying River
                     button.close(type='button' data-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
                 .modal-body.p-0
                     .container-fluid.pt-0
                         .row
-                            .col
+                            .col.pl-0
                                 img#artModalImage.rounded(src="#" alt="" style="width:420px;height:420px")
                             .col.pt-3
-                                h2.display-5 Crying River
+                                h5.modal-title Crying River
                                 hr
                                 p#artModalDescription 
                                     | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
@@ -21,12 +21,20 @@
                                     i Uploaded at 31.03.2019
                                 p#artModalAuthor
                                     i 
-                                        | By John Cena
+                                        | By Lorem ipsum
                 .modal-footer.d-block
-                    .input-group.px-5
-                        p#artModalAverageDonation Average Transaction: 5.127 Ether
-                    .input-group.mb-3.px-5.mx-auto.w-75
-                        label(for="donationSlider") Transaction Amount: #[b 5 Ether]
-                        input#donationSlider(type="range" class="custom-range" min="0.01" max="0.5" step="0.005")
-                    button#sendDonation.btn.btn-success(type='button') Send Transaction
+                    .form-group.d-flex.flex-column
+                        .input-group.px-2.my-2#artModalLimit
+                            | Amount Left: 5
+                        .input-group.px-2.my-2#artModalAverage
+                            | Average Transaction: 0 Ether
+                        .input-group.px-2.my-2#artModalFee
+                            | Artwork Fee: 0 Ether
+                        #artModalInputFee.input-group.px-2.my-2.rounded(style="width:40%;border:1px solid #bbb;")
+                            input.form-control.sniglet.text-center.border-0(type="number" placeholder="Transaction Amount" min="0.005" step="0.005" required)
+                        small.form-text.text-muted Value in Ether. User can choose to pay whatever they want for optional fees. %2 commission cut from artwork fee is applied. For optional fees commission rate is %0.5.
+                            //- .input-group.mb-3.px-5.mx-auto.w-75
+                            //-     label(for="donationSlider") Transaction Amount: #[b 5 Ether]
+                        //- input#donationSlider(type="range" class="custom-range" min="0.005" max="0.5" step="0.005")
+                    button#applyTransactionBtn.btn.btn-success(type='button') Send Transaction
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
