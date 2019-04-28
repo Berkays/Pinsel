@@ -1,11 +1,9 @@
 nav(class="navbar navbar-dark navbar-expand-lg fixed-top p-0" role="navigation")
     div.navbar-wrapper.ml-auto.mr-auto.d-flex.flex-row
         div.d-flex.flex-row
-            a.navbar-brand.p-0.d-flex.align-items-center.hvr-bob(href="/")
+            a.navbar-brand.p-0.ml-5.d-flex.align-items-center.hvr-bob(href="/")
                 img(src="/images/layout/pinselLogo.png", alt="")
 
-        button.navbar-toggler(type='button' data-toggle='collapse' data-target='.navbar-collapse')
-            span.navbar-toggler-icon
         div.pos-f-t
             div#navbarCollapse.collapse
                 div.bg-dark.py-4
@@ -22,12 +20,10 @@ nav(class="navbar navbar-dark navbar-expand-lg fixed-top p-0" role="navigation")
                             a(href='/usage') - How To Use
                         li.mb-3.pl-2
                             a(href='https://github.com/Berkays/ArtChain') - Github
-                        li.mb-3.pl-2
-                            a(href='/tech') - 
-                        li
+                        li.mb-3
                             a(href='/contact') Contact
-        div.navbar-collapse.collapse.d-flex.flex-row.justify-content-end
-            ul.nav.navbar-nav.d-flex.h-100
+        div.d-flex.flex-row.flex-grow-1.justify-content-end
+            ul.d-xs-none.navbar-nav.h-100
                 li(class=(activeNav == 'home') ? "active" : "").nav-item.h-100.hvr-underline-from-center
                     a.nav-link.h-100.d-flex.align-items-center(href='/') Home
                 li(class=(activeNav == 'about') ? "active" : "").nav-item.h-100.hvr-underline-from-center
