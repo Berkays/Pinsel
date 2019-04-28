@@ -28,6 +28,7 @@ const port = process.env.PORT || 3000;
 var indexRouter = require('./routes/index');
 var galleryRouter = require('./routes/gallery');
 var uploadRouter = require('./routes/upload');
+var accountRouter = require('./routes/account');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -43,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public', 'dist')));
 app.use('/', indexRouter);
 app.use('/gallery', galleryRouter);
 app.use('/upload', uploadRouter);
+app.use('/account', accountRouter);
 
 app.use(function (req, res, next) {
     next(createError(404));
