@@ -8,10 +8,23 @@ particlesJS.load('particles-js', '../config/particlesjs-config2.json');
 $(document).ready(function () {
     bsCustomFileInput.init()
 
+    hideStatus();
+    hideReceipt();
+
+    $('#artOptionalFee').change(() => {
+        const checked = $('#artOptionalFee').is(":checked");
+        if(checked)
+            $('#artFeeContainer').hide();
+        else
+            $('#artFeeContainer').show();
+    });
+
+
     $('#uploadForm').on('submit', async function (event) {
         event.preventDefault();
 
         hideStatus();
+        hideReceipt();
         // If metamask not initalized
         await App.init();
         if (!App.isInit) {
@@ -26,8 +39,12 @@ $(document).ready(function () {
         const imgName = web3.utils.asciiToHex(formData.get('name'), 32);
         const imgAuthor = web3.utils.asciiToHex(formData.get('author'), 16);
         const imgDescription = web3.utils.asciiToHex(formData.get('description'));
-        const imgTransferLimit = formData.get('limit');
-        const imgFee = formData.get('fee');
+        const imgTransferLimit = web3.utils.numberToHex(formData.get('limit'));
+        let imgFee = 0;
+        if ($('#artOptionalFee').is(":checked"))
+            imgFee = 0;
+        else
+            imgFee = web3.utils.toWei($('#artFee').val(), 'ether');
         const imgFile = formData.get('file');
 
         var reader = new FileReader();
@@ -43,11 +60,11 @@ $(document).ready(function () {
 
                 try {
                     showStatus('Waiting for contract...', false);
-                    const contractOperation = await App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription,imgTransferLimit);
+                    const result = await App.submitArtwork(imgHash, imgName, imgAuthor, imgDescription,imgTransferLimit,imgFee);
                     showStatus('Uploading artwork to IPFS...', false);
-                    ipfsOperation = await ipfs.add(fileContent, { pin: true });
+                    await ipfs.add(fileContent, { pin: true });
                     showStatus('Uploaded to IPFS', false);
-                    showReceipt(imgHash);
+                    showReceipt(result);
                 }
                 catch (e) {
                     console.log(e);
@@ -99,9 +116,19 @@ function hideStatus() {
     $('#statusBox').hide();
 };
 
-function showReceipt(hash) {
+function showReceipt(result) {
+    const tx = result.tx;
+    const block = result.receipt.blockHash;
+    const blockNumber = result.receipt.blockNumber;
+    const from = result.receipt.from;
+    const to = result.receipt.to;
+    const receipt = `Transaction: ${tx} \n
+                     Block Hash: ${block} \n
+                     Block Number: ${blockNumber} \n
+                     From: ${from} \n
+                     To: ${to} \n`;
     $('#receiptBox').removeClass('d-none');
-    $('#receiptText').text('IPFS Hash: ' + hash);
+    $('#receiptText').text(receipt);
 }
 
 function hideReceipt() {
