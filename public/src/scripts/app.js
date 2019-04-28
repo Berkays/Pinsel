@@ -1,14 +1,15 @@
 const Web3 = require('web3');
 const contract = require('truffle-contract');
 const artworkControllerArtifact = require('../../../build/contracts/ArtworkController.json');
+const accountControllerArtifact = require('../../../build/contracts/AccountController.json');
 
 App = {
     web3Provider: null,
     contracts: {},
-    isInit:false,
+    isInit: false,
 
     init: async function () {
-        if(App.isInit)
+        if (App.isInit)
             return;
         return await App.initWeb3();
     },
@@ -33,15 +34,20 @@ App = {
         // Legacy dapp browsers...
         else if (window.web3) {
             console.log("Legacy Dapp Browser Deteced...");
+            window.web3 = new Web3(currentProvider);
             App.web3Provider = window.web3.currentProvider;
         }
         // If no injected web3 instance is detected, fall back to Ganache
         else {
             console.log("Using Ganache...");
             App.onMetamaskNotFound();
-            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
         }
         web3 = new Web3(App.web3Provider);
+
+        window.ethereum.on('accountsChanged', function (accounts) {
+            location.reload();
+        })
 
         return await App.initContract();
     },
@@ -49,6 +55,9 @@ App = {
     initContract: function () {
         App.contracts.ArtworkController = contract(artworkControllerArtifact);
         App.contracts.ArtworkController.setProvider(App.web3Provider);
+
+        App.contracts.AccountController = contract(accountControllerArtifact);
+        App.contracts.AccountController.setProvider(App.web3Provider);
 
         App.isInit = true;
     },
@@ -80,16 +89,25 @@ App = {
         return contract.getArtworkDetails(imageHash, { from: account });
     },
 
-    submitArtwork: async function (imageHash, imageName, imageAuthor, imageDescription,imageTransferLimit) {
+    submitArtwork: async function (imageHash, imageName, imageAuthor, imageDescription, imageTransferLimit, imageFee) {
         var account = await App.getAccount();
         var contract = await App.getDeployed(App.contracts.ArtworkController);
-        return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, imageTransferLimit, { from: account });
+
+        const uploadDate = new Date();
+
+        return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, uploadDate.getTime(), imageTransferLimit, imageFee, { from: account });
     },
 
     licenseArtwork: async function (imageHash, value) {
         var account = await App.getAccount();
         var contract = await App.getDeployed(App.contracts.ArtworkController);
         return contract.license(imageHash, { from: account, value: value });
+    },
+
+    getOwnedArtworks: async function () {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.AccountController);
+        return contract.getOwnedArtworks({ from: account });
     },
 
     onMetamaskRequire: function () {
@@ -112,12 +130,10 @@ App = {
     },
 
     onMetamaskEnable: function () {
-        $('#accessStatusText').children().text('Connnected to the network.');
-        $('#metamask .spinner').hide();
         setTimeout(() => {
+            $('#metamask .spinner').hide();
             $('#metamask').hide();
-        }, 1500);
+            $('#accessStatusText').children().text('Connnected to the network.');
+        }, 2000);
     }
 };
-
-module.exports = App;
