@@ -5,12 +5,14 @@ block styles
 block content
     div#particles-js.particles-js-viewport
         .position-absolute.w-100.vh-100.d-flex.flex-column
-            div.my-auto.focus-in-contract-bck.w-100(style="max-height:250px;background-color:rgba(0,0,0,0.2)")
+            div.my-auto.focus-in-contract-bck.w-100(style="height:auto;max-height:380px;background-color:rgba(0,0,0,0.2)")
                 div.text-center.focus-in-contract-bck(style="animation-delay:0.5s")
                     h1.display-1.text-white
                         | Art Exibition
                 div.text-center.focus-in-contract-bck(style="animation-delay:1.5s")
-                    h1.display-1.text-white(style="padding-left:15rem")
+                    h1.display-1.text-white.d-none.d-sm-block(style="padding-left:15rem")
+                        | Redefined.
+                    h1.display-1.text-white.d-sm-none
                         | Redefined.
             img.d-block.mx-auto.invert.rotate-axis(src="./images/arrow_down.svg",style="width:72px;height:72px;margin-bottom:5em")
 block scripts
