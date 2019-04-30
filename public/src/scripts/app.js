@@ -134,6 +134,6 @@ App = {
             $('#metamask .spinner').hide();
             $('#metamask').hide();
             $('#accessStatusText').children().text('Connnected to the network.');
-        }, 2000);
+        }, 1500);
     }
 };
