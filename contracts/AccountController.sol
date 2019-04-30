@@ -29,7 +29,7 @@ contract AccountController {
                 break;
             }
         }
-        require(isOwned,"Artwork is already owned.");
+        require(isOwned == false,"Artwork is already owned.");
         _;
     }
 
@@ -47,10 +47,10 @@ contract AccountController {
         return ownedItems[msg.sender].length;
     }
 
-    function ownArtwork(string memory imageHash)
+    function ownArtwork(string memory imageHash,address sender)
     public
-    notOwned(imageHash,msg.sender)
+    notOwned(imageHash,sender)
     {
-        ownedItems[msg.sender].push(imageHash);
+        ownedItems[sender].push(imageHash);
     }
 }
