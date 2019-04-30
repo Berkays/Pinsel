@@ -24,6 +24,8 @@ library IpfsHash {
 contract ArtworkController {
     AccountController accountController;
 
+    address payable public pinselAdmin;
+    
     using IpfsHash for IpfsHash.Hash;
 
     event ArtworkLicensed();
@@ -51,8 +53,15 @@ contract ArtworkController {
     mapping(string => Artwork) private artworks;
     string[] public artworkHashes;
 
-    constructor(address accountControllerContractAddress) public {
+    constructor(address accountControllerContractAddress,address payable _pinselAdmin) public {
         accountController = AccountController(accountControllerContractAddress);
+        pinselAdmin = _pinselAdmin;
+    }
+
+    modifier onlyAdmin(address sender)
+    {
+        require(sender == pinselAdmin, "Only admin can withdraw");
+        _;
     }
 
     modifier artworkExists(string memory imageHash)
@@ -169,7 +178,7 @@ contract ArtworkController {
         assert(msg.value > 0);
         assert(msg.value <= address(this).balance);
 
-        accountController.ownArtwork(imageHash);
+        accountController.ownArtwork(imageHash,msg.sender);
 
         Artwork storage artwork = artworks[imageHash];
         artwork.owner.transfer(msg.value);
@@ -181,4 +190,10 @@ contract ArtworkController {
         emit ArtworkLicensed();
     }
 
+    function withdraw()
+        public
+        onlyAdmin(msg.sender)
+    {
+        pinselAdmin.transfer(address(this).balance);
+    }
 }
