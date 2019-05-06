@@ -58,15 +58,32 @@ docker run -d -p 4001:4001/tcp -p 5001:5001/tcp -p 8080:8080/tcp -p 8081:8081/tc
 
 TODO: Configuration
 
-* ## Web Server
+* ## Smart Contracts
 
-  Installing global dependecies:
+  Install truffle framework:
   ```
-  npm -g install truffle gulp-cli
+  npm -g install truffle
   ```
   or with `yarn`:
   ```
-  yarn global add truffle gulp-cli
+  yarn global add truffle
+  ```
+
+  Compile and Migrate Smart Contracts to the network:
+  ```
+  truffle compile
+  truffle migrate --reset
+  ```
+
+* ## Web Server
+
+  Install gulp package :
+  ```
+  npm -g install gulp-cli
+  ```
+  or with `yarn`:
+  ```
+  yarn global add gulp-cli
   ```
 
   Installing project dependecies  
