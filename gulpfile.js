@@ -148,4 +148,5 @@ gulp.task('clean', gulp.series(_clean));
 gulp.task('build', gulp.parallel(_js, _less, _image, _move));
 gulp.task('watch', _watch)
 gulp.task('sync', gulp.series('build', gulp.parallel(_server, 'watch')));
-gulp.task('serve', gulp.parallel(_server, 'watch'));
+gulp.task('serveWatch', gulp.parallel(_server, 'watch'));
+gulp.task('serve', gulp.series(_server));
