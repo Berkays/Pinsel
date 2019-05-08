@@ -15,6 +15,7 @@
 @link-color: white;
 @footer-height: 450px;
 @body-fill-height: 5em;
+@snackbar-height: 60px;
 
 html {
     height: 100%;
@@ -153,6 +154,16 @@ footer {
         display: block;
         position: fixed;
     }
+}
+
+.snackbar {
+    height:@snackbar-height; 
+    -webkit-transform: translateY(60px);
+    transform: translateY(60px);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 // Gallery
