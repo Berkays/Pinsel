@@ -1,0 +1,56 @@
+version: "3"
+services:
+  geth-bootnode:
+    hostname: geth-bootnode
+    environment:
+      - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b
+    build: ./bootnode
+    ports:
+      - 30301:30301/udp
+    networks:
+      ETH:
+        ipv4_address: 172.25.0.2
+
+  geth-miner:
+    hostname: geth-miner
+    depends_on:
+      - geth-bootnode
+    environment:
+      - minerAddress=0x373e1aaE21Ed2A0F249380A151E01429De549b57
+      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c
+      - bootnodeIp=172.25.0.2
+    build:
+      context: ./miner
+      args:
+        - privateKey=56a616c5fd6fc2cf06fb864bf4558a3887bf9d88f1025ce879ac3bbcf008fd4d
+        - password=miner
+    networks: 
+      ETH:
+        ipv4_address: 172.25.0.3
+
+  geth-dev:
+     hostname: geth-dev
+     depends_on:
+       - geth-miner
+     environment:
+       - minerAddress=0xC7D45a6C84D0C40fE8c851A92f3Dc88295FD9169
+       - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c
+       - bootnodeIp=172.25.0.2
+     build:
+       context: ./dev-node
+       args:
+          - privateKey=1b680a95c753f5a29ff8834f472bbb232cdbfec8494f97563e49c6ff7901a312
+          - password=miner
+     container_name: geth-dev
+     ports:
+       - 8545:8545
+     networks:
+       ETH:
+         ipv4_address: 172.25.0.4
+
+networks:
+  ETH:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
