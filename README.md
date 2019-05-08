@@ -45,18 +45,10 @@ If using a private local blockchain, ethereum clients such as [Geth](https://get
 
 If you want to deploy to one of the main Ethereum networks, you would currently need to edit the [truffle.js](/truffle.js) file.
 
-Pull the latest docker image:
-
+Deploy private blockchain with `docker compose`:
 ```
-docker pull parity/parity:beta
+docker-compose up
 ```
-
-Start an Ethereum Node using `Parity` Container:
-```
-docker run -d -p 4001:4001/tcp -p 5001:5001/tcp -p 8080:8080/tcp -p 8081:8081/tcp ipfs/go-ipfs:latest
-```
-
-TODO: Configuration
 
 * ## Smart Contracts
 
