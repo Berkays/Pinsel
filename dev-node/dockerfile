@@ -1,0 +1,18 @@
+FROM ethereum/client-go
+ADD ./genesis.json /usr/local/bin/genesis.json
+
+WORKDIR /usr/local/bin/
+
+
+ENV minerAddress=""
+ARG privateKey
+ARG password
+
+ENV bootnodeId=""
+ENV bootnodeIp=""
+RUN echo $privateKey > privateKey & echo $password > password & geth account import --password ./password ./privateKey
+RUN geth init genesis.json
+ENTRYPOINT ["/bin/sh"]
+CMD ["-c", "/usr/local/bin/geth --networkid \"45\" --bootnodes enode://${bootnodeId}@${bootnodeIp}:30301 --syncmode full --rpc --rpcaddr \"0.0.0.0\" --rpcport 8545 --rpcapi \"eth,web3,net,admin,db\" --rpccorsdomain \"*\" --allow-insecure-unlock --unlock ${minerAddress} --password /usr/local/bin/password"]
+EXPOSE 8545
+EXPOSE 30303

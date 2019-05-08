@@ -1,0 +1,7 @@
+FROM ethereum/client-go:alltools-latest
+
+ENV nodekeyhex=""
+ENTRYPOINT ["/bin/sh"] 
+CMD ["-c", "/usr/local/bin/bootnode -nodekeyhex ${nodekeyhex}"]
+EXPOSE 30301/udp
+EXPOSE 30303/udp
