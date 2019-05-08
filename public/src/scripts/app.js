@@ -16,6 +16,7 @@ App = {
 
     initWeb3: async function () {
         // Modern dapp browsers...
+
         if (window.ethereum) {
             App.web3Provider = window.ethereum;
             try {
@@ -44,6 +45,21 @@ App = {
             App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
         }
         web3 = new Web3(App.web3Provider);
+
+        const network = await web3.eth.net.getNetworkType();
+        console.log(network);
+        if (network == 'private') {
+            App.snackNotify("Connected to private network",2500);
+        }
+        else if (network == 'main') {
+            App.snackNotify("Connected to main network",2500);
+        }
+        else if (network == 'ropsten') {
+            App.snackNotify("Connected to ropsten network",2500);
+        }
+        else if (network == 'kovan') {
+            App.snackNotify("Connected to kovan network",2500);
+        }
 
         window.ethereum.on('accountsChanged', function (accounts) {
             location.reload();
@@ -135,5 +151,15 @@ App = {
             $('#metamask').hide();
             $('#accessStatusText').children().text('Connnected to the network.');
         }, 1500);
+    },
+
+    snackNotify: function (text, duration = 0) {
+        $('#snackbar').find('h1').text(text);
+        $('#snackbar').addClass('slide-in-bottom');
+        if (duration > 0) {
+            setTimeout(() => {
+                $('#snackbar').removeClass('slide-in-bottom');
+            }, duration);
+        }
     }
 };
