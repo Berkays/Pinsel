@@ -125,6 +125,14 @@ App = {
         var contract = await App.getDeployed(App.contracts.AccountController);
         return contract.getOwnedArtworks({ from: account });
     },
+    
+    isArtworkOwned: async function(imageHash) {
+        var account = await App.getAccount();
+        var contract = await App.getDeployed(App.contracts.AccountController);
+        const owned = await contract.getOwnedArtworks({ from: account });
+        let isOwned = owned.includes(imageHash);
+        return isOwned;
+    },
 
     onMetamaskRequire: function () {
         $('#metamask').show();
