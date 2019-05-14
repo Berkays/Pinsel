@@ -1,0 +1,4 @@
+FROM ipfs/go-ipfs:latest
+EXPOSE 4001/tcp 5001/tcp 8080/tcp 8081/tcp
+ENTRYPOINT ["/bin/sh"]
+CMD ["-c", "/usr/local/bin/start_ipfs && ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"*\"]' && ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"GET\", \"POST\"]' && ipfs daemon"]
