@@ -5,20 +5,28 @@ const ipfsURL = 'http://127.0.0.1:8080/ipfs/';
 $(document).ready(async () => {
     await App.init();
 
-    const artworkHashes = await App.getArtworks(); // Return IPFS hashes of uploaded images.
+    // Return IPFS hashes of uploaded images.
+    const artworkHashes = await App.getArtworks(); 
     
+    // Populate gallery
     for (let index = 0; index < artworkHashes.length; index++) {
         const hash = artworkHashes[index];
         var details = await App.getArtworkDetails(hash);
         details = convertArtworkDetails(hash,details);
-        console.log(hash);
-        addArtworkElement(hash, details);
+        addArtworkElement(details);
     }
 
+    // Start gallery slideshow
     initSlideshow();
 });
 
+function hideLoaders() {
+    $('.content-block-loader').remove();
+};
+
 function initSlideshow() {
+    hideLoaders();
+
     $('.owl-carousel').owlCarousel({
         center: true,
         items: 3,
@@ -29,10 +37,6 @@ function initSlideshow() {
         autoplayTimeout: 5000,
         autoplayHoverPause: true,
     });
-};
-
-function initIPFS() {
-    return ipfsClient('/ip4/127.0.0.1/tcp/5001');
 };
 
 function convertArtworkDetails(hash,details) {
@@ -52,7 +56,7 @@ function convertArtworkDetails(hash,details) {
     const _details = {
         name:artName,
         author:artAuthor,
-        description:artName,
+        description: artDescription,
         date: artUploadDate,
         fee: artTransactionFee,
         avgTransfer:artAvgTransfer,
@@ -62,9 +66,9 @@ function convertArtworkDetails(hash,details) {
     };
 
     return _details;
-}
+};
 
-function addArtworkElement(hash,details) {
+function addArtworkElement(details) {
     const $divContainer = $("<div>", { "class": "slide-img-container d-flex justify-content-center align-items-center" });
     const $div = $("<div>", { "class": "slide-img" });
     const $a = $("<a>", { "id": "modalTest", "data-toggle": "modal", "data-target": "#artModal", "data-artwork": JSON.stringify(details) });
@@ -80,11 +84,12 @@ function addArtworkElement(hash,details) {
 
     const $el = $divContainer.append($div.append($a.append($img).append($span.append($br).append($i))));
     $('#featured').append($el);
-}
+};
 
-$('#artModal').on('show.bs.modal', function (event) {
-    var sender = $(event.relatedTarget); // Button that triggered the modal
+$('#artModal').on('show.bs.modal', async function (event) {
+    var sender = $(event.relatedTarget);
 
+    // Artwork Details
     var data = JSON.parse($(sender).attr('data-artwork'));
 
     var modal = $(this);
@@ -95,16 +100,36 @@ $('#artModal').on('show.bs.modal', function (event) {
     modal.find('#artModalUploadDate').text("Uploaded At " + data.date);
     modal.find('#artModalAuthor').text("By " + data.author);
     modal.find('#artModalImage').attr('src', data.image);
-    modal.find('#artModalLimit').html('Amount Left: <b> &nbsp;' + data.transferLimit + '</b>');
     
+    var ownStatus = modal.find('#artModalOwned');
+    var artModalLimit = modal.find('#artModalLimit');
     var artModalFee = modal.find('#artModalFee');
     var artModalInputFee = modal.find('#artModalInputFee');
     var artModalAverage = modal.find('#artModalAverage');
+    var sendBtn = modal.find('#applyTransactionBtn');
 
+    const isOwned = await App.isArtworkOwned(data.hash);
     const optionalFee = data.fee <= 0;
+    const unlimited = data.transferLimit == 4294967295;
+
+    if(isOwned)
+    {
+        ownStatus.show();
+        sendBtn.attr("disabled", true);
+    }
+    else
+    {
+        ownStatus.hide();
+        sendBtn.attr("disabled", false);
+    }
+
+    if (unlimited)
+        artModalLimit.text('Amount Left: No Limit');
+    else
+        artModalLimit.html('Amount Left: <b> &nbsp;' + data.transferLimit + '</b>');
+    
     if(optionalFee)
     {
-        //Optional Fee
         artModalFee.hide();
         artModalInputFee.show();
         artModalAverage.show();
@@ -116,11 +141,9 @@ $('#artModal').on('show.bs.modal', function (event) {
         artModalFee.show();
         artModalInputFee.hide();
         artModalAverage.hide();
-        
 
         const etherValue = web3.utils.fromWei(data.fee,'ether');
-        artModalFee.html('Artwork Fee: <b> &nbsp;' + etherValue + '</b>');
-
+        artModalFee.html('Artwork Fee: <b> &nbsp;' + etherValue + ' Ether </b>');
     }
 
     var minLimit = (data.total_donation / data.donation_count) - 5;
@@ -144,14 +167,18 @@ $('#artModal').on('show.bs.modal', function (event) {
     newVal = donationSlider.val();
     donationSliderLabel.html("Transaction Amount: <b>" + newVal + " Ether</b>");
 
-    var sendBtn = modal.find('#applyTransactionBtn');
 
     sendBtn.on('click', async () => {
+        if(isOwned)
+            return;
+
+        sendBtn.text('Processing...');
+        
         let feeInput = 0;
         if(optionalFee)
         {
             feeInput = artModalInputFee.children().val();
-            console.log(feeInput);
+            feeInput = web3.utils.toWei(feeInput, 'ether');
         }
         else
         {
@@ -159,6 +186,7 @@ $('#artModal').on('show.bs.modal', function (event) {
         }
         const etherValue = web3.utils.toWei(feeInput, 'wei');
         const result = await App.licenseArtwork(data.hash,etherValue);
+        sendBtn.text('Done');
         console.log(result);
     });
 
