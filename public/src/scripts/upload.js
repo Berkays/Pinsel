@@ -129,11 +129,11 @@ function showReceipt(result) {
                      To: ${to} \n`;
     $('#receiptBox').removeClass('d-none');
     $('#receiptText').text(receipt);
-}
+};
 
 function hideReceipt() {
     $('#receiptBox').addClass('d-none');
-}
+};
 
 preview = function (event) {
     var src = URL.createObjectURL(event.target.files[0]);
