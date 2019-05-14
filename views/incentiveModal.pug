@@ -1,0 +1,15 @@
+#incentiveModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='incentiveModalTitle' aria-hidden='true')
+        .modal-dialog.modal-lg.modal-dialog-centered(role='document')
+            .modal-content.border
+                .modal-header
+                    h4.modal-title Label Images
+                    button.close(type='button' data-dismiss='modal' aria-label='Close' style="font-size:2em")
+                        span(aria-hidden='true') &times;
+                .modal-body.p-0
+                    .container-fluid.pt-0
+                        .row
+                            .col
+                                block modalContent
+                .modal-footer.d-block
+                    button.btn.btn-primary(type='button') Next
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel

@@ -15,7 +15,8 @@ block content
                 #accountStatus.text-center Signed account: None
             hr
             ul#ownedItemList.list-group
-            #ownedItemStatus Currently there are no owned items.
+            include contentBlockLoader
+            #ownedItemStatus(style="display:none;") Currently there are no owned items.
 block scripts
     script(src="./scripts/app.js")
     script(src="./scripts/account.js")

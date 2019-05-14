@@ -13,6 +13,7 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
         block styles
     block toplevel
+    include AiIncentiveModal
     body
         div#page-container.container-fluid.p-0
             div#body-container.px-0.pt-0
@@ -20,5 +21,6 @@ html
                 block content
             include footer
             include snackbar
-        script(src="/scripts/layout.js")
+        a#modalTest(data-toggle="modal", data-target="#incentiveModal") CLİCK ME
+        script(src="/scripts/layout.js")            
         block scripts
