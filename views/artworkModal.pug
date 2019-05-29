@@ -6,7 +6,7 @@
                     small#artModalOwned.text-success.border.border-success.rounded.align-self-center.ml-4.p-1(style="display:none;") Already Owned 
                     button.close(type='button' data-dismiss='modal' aria-label='Close' style="font-size:2em")
                         span(aria-hidden='true') &times;
-                .modal-body.p-0
+                .modal-body.p-0.pb-2
                     .container-fluid.pt-0
                         .row
                             .col.pl-0
@@ -34,6 +34,13 @@
                         #artModalInputFee.input-group.px-2.my-2.rounded(style="width:40%;border:1px solid #bbb;")
                             input.form-control.sniglet.text-center.border-0(type="number" placeholder="Transaction Amount" min="0.005" step="0.005" required)
                         small.form-text.text-muted Value in Ether. User can choose to pay whatever they want for optional fees. %2 commission cut from artwork fee is applied. For optional fees commission rate is %0.5.
+                        h5.pt-3.mt-3.border-top.border-gray Sponsorships
+                        .list-group
+                            button#incentiveBtn.list-group-item.list-group-item-action Classify images of 5 categories
+                            button.list-group-item.btn.text-left.disabled Watch advertisement
+                            button.list-group-item.btn.text-left.disabled Fill a survey
+                        #sponsorStatus.input-group.my-3.px-2 Current sponsor status: Not applied.
+                        input#sponsorValid(type="hidden", name="comission", value="0")
                             //- .input-group.mb-3.px-5.mx-auto.w-75
                             //-     label(for="donationSlider") Transaction Amount: #[b 5 Ether]
                         //- input#donationSlider(type="range" class="custom-range" min="0.005" max="0.5" step="0.005")

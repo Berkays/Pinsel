@@ -1,8 +1,8 @@
-#incentiveModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='incentiveModalTitle' aria-hidden='true')
-        .modal-dialog.modal-lg.modal-dialog-centered(role='document')
+#incentiveModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='incentiveModalTitle' aria-hidden='true' data-backdrop="static" data-valid=0)
+        .modal-dialog.modal-lg.modal-dialog-centered(role='document' style="max-width:440px;")
             .modal-content.border
                 .modal-header
-                    h4.modal-title Label Images
+                    block modalTitle
                     button.close(type='button' data-dismiss='modal' aria-label='Close' style="font-size:2em")
                         span(aria-hidden='true') &times;
                 .modal-body.p-0
@@ -10,6 +10,6 @@
                         .row
                             .col
                                 block modalContent
-                .modal-footer.d-block
-                    button.btn.btn-primary(type='button') Next
+                .modal-footer.justify-content-end
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+                    button#nextBtn.btn.btn-primary(type='button') Next

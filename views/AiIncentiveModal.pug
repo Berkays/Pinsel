@@ -1,9 +1,104 @@
 extends incentiveModal
 
+block modalTitle
+    h5.modal-title Classify Images
+
 block modalContent
-    .custom-control.custom-radio.custom-control-inline
-        input#customRadioInline1.custom-control-input(type="radio" name="customRadioInline1")
-        label.custom-control-label(for="customRadioInline1") Toggle this custom radio
-    .custom-control.custom-radio.custom-control-inline
-        input#customRadioInline2.custom-control-input(type="radio" name="customRadioInline1")
-        label.custom-control-label(for="customRadioInline2") Or toggle this other custom radio
+    div.my-2
+        small #[i Please mark the correct category for given images.]
+    form#test(action="" style="overflow:hidden")
+        fieldset.d-none.current
+            .form-row.justify-content-center
+                .col-auto
+                    p.lead Image: 1/5
+                    img(src="/images/uploads/img1.jpg", alt="")
+            .form-row.mt-3
+                .col-auto
+                    .custom-control.custom-radio
+                        input#customRadioInline1.custom-control-input(type="radio" name="q1" value="0" checked style="background-color:green")
+                        label.custom-control-label(for="customRadioInline1") Category Name 1
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline2.custom-control-input(type="radio" name="q1" value="1")
+                        label.custom-control-label(for="customRadioInline2") Category Name 2
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline3.custom-control-input(type="radio" name="q1" value="2")
+                        label.custom-control-label(for="customRadioInline3") Category Name 3
+                    .custom-control.custom-radio.py-2
+                        input#customRadioInline4.custom-control-input(type="radio" name="q1" value="3")
+                        label.custom-control-label(for="customRadioInline4") Category Name 4
+        fieldset.d-none
+            .form-row.justify-content-center
+                .col-auto
+                    p.lead Image: 2/5
+                    img(src="/images/uploads/img2.jpg", alt="")
+            .form-row.mt-3
+                .col-auto
+                    .custom-control.custom-radio
+                        input#customRadioInline5.custom-control-input(type="radio" name="q2" value="0" checked style="background-color:green")
+                        label.custom-control-label(for="customRadioInline5") Category Name 1
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline6.custom-control-input(type="radio" name="q2" value="1")
+                        label.custom-control-label(for="customRadioInline6") Category Name 2
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline7.custom-control-input(type="radio" name="q2" value="2")
+                        label.custom-control-label(for="customRadioInline7") Category Name 3
+                    .custom-control.custom-radio.py-2
+                        input#customRadioInline8.custom-control-input(type="radio" name="q2" value="3")
+                        label.custom-control-label(for="customRadioInline8") Category Name 4
+        fieldset.d-none
+            .form-row.justify-content-center
+                .col-auto
+                    p.lead Image: 3/5
+                    img(src="/images/uploads/img3.jpg", alt="")
+            .form-row.mt-3
+                .col-auto
+                    .custom-control.custom-radio
+                        input#customRadioInline9.custom-control-input(type="radio" name="q3" value="0" checked style="background-color:green")
+                        label.custom-control-label(for="customRadioInline9") Category Name 1
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline10.custom-control-input(type="radio" name="q3" value="1")
+                        label.custom-control-label(for="customRadioInline10") Category Name 2
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline11.custom-control-input(type="radio" name="q3" value="2")
+                        label.custom-control-label(for="customRadioInline11") Category Name 3
+                    .custom-control.custom-radio.py-2
+                        input#customRadioInline12.custom-control-input(type="radio" name="q3" value="3")
+                        label.custom-control-label(for="customRadioInline12") Category Name 4
+        fieldset.d-none
+            .form-row.justify-content-center
+                .col-auto
+                    p.lead Image: 4/5
+                    img(src="/images/uploads/img4.jpg", alt="")
+            .form-row.mt-3
+                .col-auto
+                    .custom-control.custom-radio
+                        input#customRadioInline13.custom-control-input(type="radio" name="q4" value="0" checked)
+                        label.custom-control-label(for="customRadioInline13") Category Name 1
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline14.custom-control-input(type="radio" name="q4" value="1")
+                        label.custom-control-label(for="customRadioInline14") Category Name 2
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline15.custom-control-input(type="radio" name="q4" value="2")
+                        label.custom-control-label(for="customRadioInline15") Category Name 3
+                    .custom-control.custom-radio.py-2
+                        input#customRadioInline16.custom-control-input(type="radio" name="q4" value="3")
+                        label.custom-control-label(for="customRadioInline16") Category Name 4
+        fieldset.d-none
+            .form-row.justify-content-center
+                .col-auto
+                    p.lead Image: 5/5
+                    img(src="/images/uploads/img5.jpg", alt="")
+            .form-row.mt-3
+                .col-auto
+                    .custom-control.custom-radio
+                        input#customRadioInline18.custom-control-input(type="radio" name="q5" value="0" checked)
+                        label.custom-control-label(for="customRadioInline18") Category Name 1
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline19.custom-control-input(type="radio" name="q5" value="1")
+                        label.custom-control-label(for="customRadioInline19") Category Name 2
+                    .custom-control.custom-radio.pt-2
+                        input#customRadioInline20.custom-control-input(type="radio" name="q5" value="2")
+                        label.custom-control-label(for="customRadioInline20") Category Name 3
+                    .custom-control.custom-radio.py-2
+                        input#customRadioInline21.custom-control-input(type="radio" name="q5" value="3")
+                        label.custom-control-label(for="customRadioInline21") Category Name 4

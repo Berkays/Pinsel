@@ -15,4 +15,4 @@ function navbarScroll() {
         // On Start
         $(".navbar").removeClass("shadow border-bottom border-dark navbar-scroll-color");
     }
-}
+};

@@ -6,22 +6,22 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const app = express();
 
-const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient('/ip4/127.0.0.1/tcp/5001')
+//const ipfsClient = require('ipfs-http-client');
+//const ipfs = ipfsClient('/ip4/127.0.0.1/tcp/5001')
 
-app.ipfs = ipfs;
+//app.ipfs = ipfs;
 
-let ipfsOperation = ipfs.get('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme');
+//let ipfsOperation = ipfs.get('/ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme');
 
-ipfsOperation
-.then((results) => {
-    console.log("IPFS Connected.");
-    app.ipfs.connected = true;
-})
-.catch((err) => {
-    app.ipfs.connected = false;
-    console.warn("IPFS Not Connected.");
-});
+// ipfsOperation
+// .then((results) => {
+//     console.log("IPFS Connected.");
+//     app.ipfs.connected = true;
+// })
+// .catch((err) => {
+//     app.ipfs.connected = false;
+//     console.warn("IPFS Not Connected.");
+//});
 
 const port = process.env.PORT || 3000;
 

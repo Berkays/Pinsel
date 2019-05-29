@@ -133,7 +133,9 @@ const _server = (cb) => {
 
             browserSync.init(null, {
                 proxy: "http://localhost:3000",
-                port: 3001
+                port: 3001,
+                notify: true,
+                debug: true
             });
         }
     });
