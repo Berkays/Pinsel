@@ -24,6 +24,8 @@ services:
       args:
         - privateKey=56a616c5fd6fc2cf06fb864bf4558a3887bf9d88f1025ce879ac3bbcf008fd4d
         - password=miner
+    volumes:
+      - miner-1:/root/.ethash
     networks: 
       ETH:
         ipv4_address: 172.25.0.3
@@ -44,6 +46,8 @@ services:
      container_name: geth-dev
      ports:
        - 8545:8545
+    volumes:
+      - dev:/root/.ethash
      networks:
        ETH:
          ipv4_address: 172.25.0.4
@@ -54,3 +58,7 @@ networks:
     ipam:
       config:
       - subnet: 172.25.0.0/24
+
+volumes:
+  miner-1:
+  dev:
