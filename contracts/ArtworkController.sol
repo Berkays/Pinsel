@@ -166,7 +166,7 @@ contract ArtworkController {
                 artworks[imageHash].details);
     }  
 
-    function license(string memory imageHash) 
+    function license(string memory imageHash, bool cutComission) 
         public 
         payable 
         differentPerson(msg.sender,imageHash)
@@ -181,7 +181,17 @@ contract ArtworkController {
         accountController.ownArtwork(imageHash,msg.sender);
 
         Artwork storage artwork = artworks[imageHash];
-        artwork.owner.transfer(msg.value);
+
+
+        if(cutComission == true)
+        {
+            uint newValue = msg.value * 5 / 1000;
+            artwork.owner.transfer(newValue);
+        }
+        else
+        {
+            artwork.owner.transfer(msg.value);
+        }
 
         artwork.details.avgTransfer = ((artwork.details.avgTransfer * artwork.details.transferCount) + msg.value) / (artwork.details.transferCount + 1);
         artwork.details.transferCount++;

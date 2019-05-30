@@ -33,13 +33,13 @@ function initSlideshow() {
     hideLoaders();
 
     $('.owl-carousel').owlCarousel({
-        center: true,
+        center: false,
         items: 3,
         loop: true,
         margin: 100,
         autoWidth: true,
         autoplay: true,
-        autoplayTimeout: 5000,
+        autoplayTimeout: 4000,
         autoplayHoverPause: true,
     });
 };
@@ -259,7 +259,7 @@ $(document).on('show.bs.modal', '#artModal', async function (event) {
             feeInput = data.fee;
         }
         const etherValue = web3.utils.toWei(feeInput, 'wei');
-        const result = await App.licenseArtwork(data.hash, etherValue,applyComission);
+        const result = await App.licenseArtwork(data.hash, etherValue, applyComission);
         sendBtn.text('Done');
         console.log(result);
     });

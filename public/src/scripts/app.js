@@ -49,16 +49,16 @@ App = {
         const network = await web3.eth.net.getNetworkType();
         console.log(network);
         if (network == 'private') {
-            App.snackNotify("Connected to private network",2500);
+            App.snackNotify("Connected to private network", 2500);
         }
         else if (network == 'main') {
-            App.snackNotify("Connected to main network",2500);
+            App.snackNotify("Connected to main network", 2500);
         }
         else if (network == 'ropsten') {
-            App.snackNotify("Connected to ropsten network",2500);
+            App.snackNotify("Connected to ropsten network", 2500);
         }
         else if (network == 'kovan') {
-            App.snackNotify("Connected to kovan network",2500);
+            App.snackNotify("Connected to kovan network", 2500);
         }
 
         window.ethereum.on('accountsChanged', function (accounts) {
@@ -114,10 +114,10 @@ App = {
         return contract.addArtwork(imageHash, imageName, imageAuthor, imageDescription, uploadDate.getTime(), imageTransferLimit, imageFee, { from: account });
     },
 
-    licenseArtwork: async function (imageHash, value) {
+    licenseArtwork: async function (imageHash, value, sponsorship) {
         var account = await App.getAccount();
         var contract = await App.getDeployed(App.contracts.ArtworkController);
-        return contract.license(imageHash, { from: account, value: value });
+        return contract.license(imageHash, sponsorship, { from: account, value: value });
     },
 
     getOwnedArtworks: async function () {
@@ -125,8 +125,8 @@ App = {
         var contract = await App.getDeployed(App.contracts.AccountController);
         return contract.getOwnedArtworks({ from: account });
     },
-    
-    isArtworkOwned: async function(imageHash) {
+
+    isArtworkOwned: async function (imageHash) {
         var account = await App.getAccount();
         var contract = await App.getDeployed(App.contracts.AccountController);
         const owned = await contract.getOwnedArtworks({ from: account });
