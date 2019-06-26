@@ -19,36 +19,16 @@ TODO: Architecture Diagram
 
 # Installation
 
-* ## IPFS Node
+* ## IPFS and Ethereum Network
 
-Pull the latest docker image:
-
+Run IPFS and Ethereum nodes with `docker compose` at the root directory of the project:
 ```
-docker pull ipfs/go-ipfs
+docker-compose up
 ```
-
-Start an `IPFS` Container:
-```
-docker run -d -p 4001:4001/tcp -p 5001:5001/tcp -p 8080:8080/tcp -p 8081:8081/tcp ipfs/go-ipfs:latest
-```
-
-Attach to the container and allow `Cross-Origin-Requests`:
-```
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["GET", "POST"]'
-```
-
-
-* ## Ethereum Node
 
 If using a private local blockchain, ethereum clients such as [Geth](https://geth.ethereum.org/) or [Parity](https://www.parity.io/) can be used in a Docker container. [Ganache](https://truffleframework.com/ganache) is also can be used to deploy contracts for testing without using docker.
 
 If you want to deploy to one of the main Ethereum networks, you would currently need to edit the [truffle.js](/truffle.js) file.
-
-Deploy private blockchain with `docker compose`:
-```
-docker-compose up
-```
 
 * ## Smart Contracts
 
