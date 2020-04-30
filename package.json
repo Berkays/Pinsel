@@ -36,7 +36,7 @@
         "express-fileupload": "^1.1.4",
         "hover.css": "^2.3.2",
         "ipfs-http-client": "^30.1.3",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "loaders.css": "^0.1.2",
         "nodemon": "^1.18.11",
         "owl.carousel": "^2.3.4",
