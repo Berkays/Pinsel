@@ -42,7 +42,7 @@
         "owl.carousel": "^2.3.4",
         "particles.js": "^2.0.0",
         "popper.js": "^1.14.7",
-        "pug": "2.0.0-beta11",
+        "pug": "3.0.1",
         "truffle-contract": "^4.0.12",
         "web3": "^1.0.0-beta.51"
     }
